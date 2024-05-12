@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:prowiz/screens/home_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/images.dart';
 import 'package:prowiz/utils/strings.dart';
@@ -42,10 +44,10 @@ class LoginScreen extends StatelessWidget {
                 height: 20,
               ),
               passwordField(),
-              SizedBox(
-                height: 30,
+              const SizedBox(
+                height: 35,
               ),
-              submitButton(),
+              submitButton(context),
             ],
           ),
         ),
@@ -86,17 +88,20 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  submitButton() {
+  submitButton(BuildContext context) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          minimumSize: Size(double.infinity, 48),
+          minimumSize: const Size(double.infinity, 48),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
           backgroundColor: ConstantColors.buttonColor,
         ),
-        onPressed: () {},
-        child: Text(
+        onPressed: () {
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        },
+        child: const Text(
           Constants.submit,
           style: TextStyle(color: Colors.white),
         ));
