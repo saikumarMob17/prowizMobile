@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:prowiz/screens/home_screen.dart';
 import 'package:prowiz/utils/colors.dart';
+import 'package:prowiz/utils/custom_text.dart';
 import 'package:prowiz/utils/images.dart';
 import 'package:prowiz/utils/strings.dart';
 
@@ -11,56 +11,50 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ConstantColors.primaryColor,
       body: Padding(
-        padding: const EdgeInsets.all(48),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 100, width: 100, child: FlutterLogo()),
-              const SizedBox(
-                height: 25,
-              ),
-              RichText(
-                text: const TextSpan(children: [
-                  TextSpan(
-                      text: Constants.welcomeBackText,
-                      style: TextStyle(color: ConstantColors.blackColor)),
-                  WidgetSpan(
-                      child: SizedBox(
-                    width: 5,
-                  )),
-                  TextSpan(
-                      text: Constants.login,
-                      style: TextStyle(color: ConstantColors.loginTextColor)),
-                ]),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              userNameField(),
-              const SizedBox(
-                height: 20,
-              ),
-              passwordField(),
-              const SizedBox(
-                height: 35,
-              ),
-              submitButton(context),
-            ],
-          ),
+        padding: const EdgeInsets.all(57),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              ConstantImages.logo,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            const CustomTextWidget(
+              text: Constants.welcomeBackSignIn,
+              color: Colors.white,
+              fontWeight: FontWeight.w400,
+              size: 16,
+            ),
+            const SizedBox(
+              height: 28,
+            ),
+            userNameField(),
+            const SizedBox(
+              height: 15,
+            ),
+            passwordField(),
+            const SizedBox(
+              height: 30,
+            ),
+            submitButton(context),
+          ],
         ),
       ),
     );
   }
 
   var focusBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none);
+      borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none);
 
   var contentPadding = const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
 
-  var hintTextStyle = const TextStyle(fontSize: 12, color: Colors.black12);
+  var hintTextStyle = const TextStyle(fontSize: 12, color: Colors.black);
   userNameField() {
     return TextFormField(
       decoration: InputDecoration(
@@ -68,7 +62,7 @@ class LoginScreen extends StatelessWidget {
           hintText: Constants.userName,
           hintStyle: hintTextStyle,
           contentPadding: contentPadding,
-          fillColor: ConstantColors.textFieldColor,
+          fillColor: ConstantColors.whiteColor,
           focusedBorder: focusBorder,
           border: focusBorder),
     );
@@ -80,7 +74,7 @@ class LoginScreen extends StatelessWidget {
         filled: true,
         hintText: Constants.password,
         hintStyle: hintTextStyle,
-        fillColor: ConstantColors.textFieldColor,
+        fillColor: ConstantColors.whiteColor,
         contentPadding: contentPadding,
         focusedBorder: focusBorder,
         border: focusBorder,
@@ -93,17 +87,18 @@ class LoginScreen extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(double.infinity, 48),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(20),
           ),
-          backgroundColor: ConstantColors.buttonColor,
+          backgroundColor: ConstantColors.loginButtonColor,
         ),
         onPressed: () {
-
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()));
         },
-        child: const Text(
-          Constants.submit,
-          style: TextStyle(color: Colors.white),
+        child: const CustomTextWidget(
+          text: Constants.submit,
+          color: ConstantColors.whiteColor,
+          size: 16,
         ));
   }
 }

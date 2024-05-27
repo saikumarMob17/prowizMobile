@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:prowiz/screens/login_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
 import 'package:prowiz/utils/images.dart';
@@ -22,23 +24,30 @@ class SplashScreen extends StatelessWidget {
                   fit: BoxFit.fill)),
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.only(top: 120),
+              padding: EdgeInsets.only(top: Platform.isIOS ? 200 : 120),
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                     text: Constants.welcomeBackText,
                     children: [
-                      WidgetSpan(
+                      const WidgetSpan(
                           child: SizedBox(
                         width: 5,
                       )),
                       TextSpan(
                           text: Constants.login,
-                          style: TextStyle(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            },
+                          style: const TextStyle(
                               fontSize: 16,
                               color: ConstantColors.textFieldColor))
                     ],
                     style:
-                        TextStyle(fontWeight: FontWeight.w400, fontSize: 16)),
+                        const TextStyle(fontWeight: FontWeight.w400, fontSize: 16)),
               ),
             ),
           ),
@@ -92,7 +101,10 @@ class SplashScreen extends StatelessWidget {
                     height: 20,
                   ),
                   richTextWidget(Constants.desc1, "",
-                      content3: Constants.desc2,content1Color: const Color(0xffFFFFFF).withOpacity(0.4),fontSize: 12,content4: Constants.desc3),
+                      content3: Constants.desc2,
+                      content1Color: const Color(0xffFFFFFF).withOpacity(0.4),
+                      fontSize: 12,
+                      content4: Constants.desc3),
                   const SizedBox(
                     height: 20,
                   ),
@@ -108,7 +120,7 @@ class SplashScreen extends StatelessWidget {
 
 richTextWidget(String content1, String content2,
     {String? content3,
-      String? content4,
+    String? content4,
     double sizedBoxValue = 0,
     Color? content1Color,
     Color? content2Color,
@@ -132,7 +144,11 @@ richTextWidget(String content1, String content2,
                 ))
               : TextSpan(
                   text: content2,
-                  style: TextStyle(fontSize: fontSize, color: content2Color,letterSpacing: -0.24,)),
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    color: content2Color,
+                    letterSpacing: -0.24,
+                  )),
           TextSpan(
               text: content3,
               recognizer: TapGestureRecognizer()
@@ -140,27 +156,24 @@ richTextWidget(String content1, String content2,
                   log("YESSSSS");
                 },
               style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w400,
-                color: content3Color,
-                  letterSpacing: -0.24,
-                decoration: TextDecoration.underline
-              )),
-          TextSpan(
-              text: content4,
-
-              style: TextStyle(
                   fontSize: fontSize,
-                  letterSpacing: -0.24,
                   fontWeight: FontWeight.w400,
                   color: content3Color,
+                  letterSpacing: -0.24,
+                  decoration: TextDecoration.underline)),
+          TextSpan(
+              text: content4,
+              style: TextStyle(
+                fontSize: fontSize,
+                letterSpacing: -0.24,
+                fontWeight: FontWeight.w400,
+                color: content3Color,
               ))
         ],
         style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: fontSize,
             letterSpacing: -0.24,
-
             color: content1Color)),
   );
 }

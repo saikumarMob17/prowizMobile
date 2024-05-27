@@ -5,8 +5,10 @@ class ConstantColors{
   static const primaryColor= Color(0xff002845);
   static const loginTextColor= Color(0xff064881);
   static const textFieldColor= Color(0xff7DDFF1);
+  static const whiteColor= Color(0xffFFFFFF);
   static const buttonColor= Color(0xff00447D);
   static const descriptionColor= Color(0xff082840);
   static const bgColor= Color(0x284580);
   static const lineColor= Color(0xFFFFFF);
+  static const loginButtonColor= Color(0xff0092CE);
 }
