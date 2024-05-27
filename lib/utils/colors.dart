@@ -7,4 +7,6 @@ class ConstantColors{
   static const textFieldColor= Color(0xff7DDFF1);
   static const buttonColor= Color(0xff00447D);
   static const descriptionColor= Color(0xff082840);
+  static const bgColor= Color(0x284580);
+  static const lineColor= Color(0xFFFFFF);
 }

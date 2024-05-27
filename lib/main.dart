@@ -15,8 +15,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        bottomSheetTheme:
+        const BottomSheetThemeData(backgroundColor: Colors.transparent),
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 
