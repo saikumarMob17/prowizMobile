@@ -11,4 +11,5 @@ class ConstantColors{
   static const bgColor= Color(0x284580);
   static const lineColor= Color(0xFFFFFF);
   static const loginButtonColor= Color(0xff0092CE);
+  static const splashBgColor= Color(0xff04366A);
 }

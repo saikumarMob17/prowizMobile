@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:prowiz/screens/home_screen.dart';
+import 'package:prowiz/screens/test_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
-import 'package:prowiz/utils/images.dart';
 import 'package:prowiz/utils/strings.dart';
+import 'package:prowiz/utils/images.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -26,7 +27,7 @@ class LoginScreen extends StatelessWidget {
               height: 25,
             ),
             const CustomTextWidget(
-              text: Constants.welcomeBackSignIn,
+              text: Constants.welcomeBackSign,
               color: Colors.white,
               fontWeight: FontWeight.w400,
               size: 16,
@@ -96,7 +97,7 @@ class LoginScreen extends StatelessWidget {
               MaterialPageRoute(builder: (context) => const HomeScreen()));
         },
         child: const CustomTextWidget(
-          text: Constants.submit,
+          text: Constants.Login,
           color: ConstantColors.whiteColor,
           size: 16,
         ));

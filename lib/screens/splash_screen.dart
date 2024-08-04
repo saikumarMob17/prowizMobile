@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:prowiz/screens/login_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
@@ -14,6 +15,10 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var welcomeFont = GoogleFonts.roboto(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: ConstantColors.textFieldColor);
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -23,45 +28,40 @@ class SplashScreen extends StatelessWidget {
                   image: AssetImage(ConstantImages.splashBg),
                   fit: BoxFit.fill)),
           child: Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: Platform.isIOS ? 200 : 120),
-              child: RichText(
-                text: TextSpan(
-                    text: Constants.welcomeBackText,
-                    children: [
-                      const WidgetSpan(
-                          child: SizedBox(
-                        width: 5,
-                      )),
-                      TextSpan(
-                          text: Constants.login,
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
-                            },
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: ConstantColors.textFieldColor))
-                    ],
-                    style:
-                        const TextStyle(fontWeight: FontWeight.w400, fontSize: 16)),
-              ),
+            child: RichText(
+              text: TextSpan(
+                  text: Constants.welcomeText,
+                  children: [
+                    const WidgetSpan(
+                        child: SizedBox(
+                      width: 5,
+                    )),
+                    TextSpan(
+                        text: Constants.login,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()));
+                          },
+                        style: welcomeFont)
+                  ],
+                  style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400, fontSize: 16)),
             ),
           ),
         ),
         bottomSheet: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-          decoration: BoxDecoration(
-              color: ConstantColors.bgColor.withOpacity(0.5),
-              image: const DecorationImage(
+          decoration: const BoxDecoration(
+              color: ConstantColors.splashBgColor,
+              image: DecorationImage(
                   image: AssetImage(
                     ConstantImages.bottomSheetBG,
                   ),
                   fit: BoxFit.fill),
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                   topRight: Radius.circular(22), topLeft: Radius.circular(22))),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -69,6 +69,8 @@ class SplashScreen extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+
                 children: [
                   Align(
                     alignment: Alignment.center,
@@ -83,8 +85,14 @@ class SplashScreen extends StatelessWidget {
                   const SizedBox(
                     height: 47,
                   ),
-                  const CustomTextWidget(
-                    text: "Hello Welcome\nto CCTV live Portal pp",
+                   const CustomTextWidget(
+                    text: Constants.helloWelcome,
+                    color: ConstantColors.whiteColor,
+                    size: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
+                   const CustomTextWidget(
+                    text: Constants.ccTvLiveDesc,
                     color: Colors.white,
                     size: 24,
                     fontWeight: FontWeight.w400,
@@ -100,11 +108,17 @@ class SplashScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  richTextWidget(Constants.desc1, "",
-                      content3: Constants.desc2,
-                      content1Color: const Color(0xffFFFFFF).withOpacity(0.4),
-                      fontSize: 12,
-                      content4: Constants.desc3),
+
+                  CustomTextWidget(
+
+                      text: Constants.readMoreDesc,
+                    textAlign: TextAlign.justify,
+                    fontWeight: FontWeight.w400,
+                    size: 12,
+                    color: ConstantColors.whiteColor.withOpacity(0.5),
+
+
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
