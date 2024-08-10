@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:prowiz/controllers/login_controller.dart';
 import 'package:prowiz/screens/home_screen.dart';
-import 'package:prowiz/screens/test_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
 import 'package:prowiz/utils/strings.dart';
@@ -9,44 +10,50 @@ import 'package:prowiz/utils/images.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
+  final LoginController loginController = Get.put(LoginController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ConstantColors.primaryColor,
-      body: Padding(
-        padding: const EdgeInsets.all(57),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              ConstantImages.logo,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            const CustomTextWidget(
-              text: Constants.welcomeBackSign,
-              color: Colors.white,
-              fontWeight: FontWeight.w400,
-              size: 16,
-            ),
-            const SizedBox(
-              height: 28,
-            ),
-            userNameField(),
-            const SizedBox(
-              height: 15,
-            ),
-            passwordField(),
-            const SizedBox(
-              height: 30,
-            ),
-            submitButton(context),
-          ],
-        ),
-      ),
+      body: GetBuilder<LoginController>(
+          init: loginController,
+          builder: (_) {
+            return Padding(
+              padding: const EdgeInsets.all(57),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    ConstantImages.logo,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  const CustomTextWidget(
+                    text: Constants.welcomeBackSign,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                    size: 16,
+                  ),
+                  const SizedBox(
+                    height: 28,
+                  ),
+                  userNameField(),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  passwordField(),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  submitButton(context),
+                ],
+              ),
+            );
+          }),
     );
   }
 
@@ -58,6 +65,7 @@ class LoginScreen extends StatelessWidget {
   var hintTextStyle = const TextStyle(fontSize: 12, color: Colors.black);
   userNameField() {
     return TextFormField(
+      controller: loginController.email,
       decoration: InputDecoration(
           filled: true,
           hintText: Constants.userName,
@@ -71,6 +79,7 @@ class LoginScreen extends StatelessWidget {
 
   passwordField() {
     return TextFormField(
+      controller: loginController.password,
       decoration: InputDecoration(
         filled: true,
         hintText: Constants.password,
@@ -93,8 +102,10 @@ class LoginScreen extends StatelessWidget {
           backgroundColor: ConstantColors.loginButtonColor,
         ),
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()));
+          loginController.getAccessToken(loginController.email.text.trim(),
+              loginController.password.text.trim());
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => const HomeScreen()));
         },
         child: const CustomTextWidget(
           text: Constants.Login,

@@ -3,12 +3,17 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prowiz/screens/login_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
 import 'package:prowiz/utils/images.dart';
 import 'package:prowiz/utils/strings.dart';
+
+
+
+final storageBox= GetStorage();
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

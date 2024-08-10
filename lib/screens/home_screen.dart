@@ -1,10 +1,11 @@
-import 'dart:developer';
-
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:chewie/chewie.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prowiz/screens/account.dart';
+import 'package:prowiz/screens/settings.dart';
+import 'package:prowiz/screens/test_home.dart';
 import 'package:prowiz/screens/test_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
@@ -20,6 +21,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final _pageController = PageController(initialPage: 0);
+
+  final NotchBottomBarController _controller = NotchBottomBarController(index: 0);
+
+  int maxCount =3;
+
   final List<String> listOfItems = [
     "Library",
     "Play Area",
@@ -89,25 +97,46 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
     _videoPlayerController.dispose();
     chewieController.dispose();
+    _pageController.dispose();
+
   }
 
   @override
   Widget build(BuildContext context) {
+
+
+    final List<Widget> bottomBarPages =[
+
+
+      HomeScreen1(),
+      const SettingScreen(),
+      const AccountScreen(),
+
+
+
+
+    ];
+
+
+
+
+
     return Scaffold(
         backgroundColor: ConstantColors.primaryColor,
-        bottomNavigationBar: NavigationBar(
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.home), label: "Home"),
-            NavigationDestination(icon: Icon(Icons.settings), label: "Home"),
-            NavigationDestination(
-                icon: Icon(Icons.account_circle), label: "Home"),
-          ],
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-        ),
+
+        // bottomNavigationBar: NavigationBar(
+        //   destinations: const [
+        //     NavigationDestination(icon: Icon(Icons.home), label: "Home"),
+        //     NavigationDestination(icon: Icon(Icons.settings), label: "Home"),
+        //     NavigationDestination(
+        //         icon: Icon(Icons.account_circle), label: "Home"),
+        //   ],
+        //   onDestinationSelected: (int index) {
+        //     setState(() {
+        //       currentPageIndex = index;
+        //     });
+        //   },
+        // ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -140,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: ConstantColors.loginButtonColor)),
                     shape:  RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.white
                       )
                     ),
@@ -148,10 +177,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     collapsedIconColor: ConstantColors.whiteColor,
                     tilePadding: EdgeInsets.zero,
 
-                    title: Text(
+                    title: const Text(
                       "Center",
                       style:
-                      const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     children: listOfItems.map((e) {
                       return ListTile(
@@ -246,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
   _buildClassListTile(BuildContext context, String title,
       {required VoidCallback onPressed}) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: ConstantColors.loginButtonColor,
       ),
       child: ListTile(

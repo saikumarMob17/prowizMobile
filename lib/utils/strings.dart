@@ -63,7 +63,11 @@ class Constants {
   static const readMore = "Read more";
   static const Login = "Login";
   static const welcomeBackSign = "Welcome back! Sign in.";
+  static const loginSuccess = "User Logged in successfully";
   static const readMoreDesc = "Surveillance of the public using CCTV is common in many areasaround the world. Video surveillance has generated significantdebate about balancing its use with individuals right to privacy even when in public.";
 
+
+
+  static const parentLoginApi = "parentlogin/";
 
 }
