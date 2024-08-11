@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:prowiz/controllers/login_controller.dart';
 import 'package:prowiz/screens/home_screen.dart';
 import 'package:prowiz/utils/colors.dart';
+import 'package:prowiz/utils/custom_loader.dart';
 import 'package:prowiz/utils/custom_text.dart';
 import 'package:prowiz/utils/strings.dart';
 import 'package:prowiz/utils/images.dart';
@@ -19,38 +21,43 @@ class LoginScreen extends StatelessWidget {
       body: GetBuilder<LoginController>(
           init: loginController,
           builder: (_) {
-            return Padding(
-              padding: const EdgeInsets.all(57),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    ConstantImages.logo,
-                    fit: BoxFit.cover,
+            return Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center ,
+                    children: [
+
+                      Image.asset(
+                        ConstantImages.logo,
+                        fit: BoxFit.cover,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      const CustomTextWidget(
+                        text: Constants.welcomeBackSign,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                        size: 16,
+                      ),
+                      const SizedBox(
+                        height: 28,
+                      ),
+                      userNameField(),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      passwordField(),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      submitButton(context),
+                    ],
                   ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  const CustomTextWidget(
-                    text: Constants.welcomeBackSign,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    size: 16,
-                  ),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  userNameField(),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  passwordField(),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  submitButton(context),
-                ],
+                ),
               ),
             );
           }),
@@ -62,12 +69,17 @@ class LoginScreen extends StatelessWidget {
 
   var contentPadding = const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
 
-  var hintTextStyle = const TextStyle(fontSize: 12, color: Colors.black);
+  var hintTextStyle =
+      const TextStyle(fontSize: 12, color: ConstantColors.blackColor);
   userNameField() {
     return TextFormField(
-      controller: loginController.email,
+      controller: loginController.emailController,
+      onChanged:(value) {
+        loginController.emailValidation();
+      },
       decoration: InputDecoration(
           filled: true,
+          errorText: loginController.emailError,
           hintText: Constants.userName,
           hintStyle: hintTextStyle,
           contentPadding: contentPadding,
@@ -79,10 +91,24 @@ class LoginScreen extends StatelessWidget {
 
   passwordField() {
     return TextFormField(
-      controller: loginController.password,
+      controller: loginController.passwordController,
+      obscureText: loginController.isPasswordObscured,
+
+      onChanged: (value) {
+        loginController.passwordValidation();
+      },
       decoration: InputDecoration(
         filled: true,
+
+        errorText: loginController.passwordError,
+        suffixIcon: IconButton(
+          icon: Icon(loginController.isPasswordObscured
+              ? Icons.visibility_off
+              : Icons.visibility),
+          onPressed: loginController.passwordVisibility,
+        ),
         hintText: Constants.password,
+
         hintStyle: hintTextStyle,
         fillColor: ConstantColors.whiteColor,
         contentPadding: contentPadding,
@@ -93,24 +119,28 @@ class LoginScreen extends StatelessWidget {
   }
 
   submitButton(BuildContext context) {
-    return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          minimumSize: const Size(double.infinity, 48),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          backgroundColor: ConstantColors.loginButtonColor,
-        ),
-        onPressed: () {
-          loginController.getAccessToken(loginController.email.text.trim(),
-              loginController.password.text.trim());
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => const HomeScreen()));
-        },
-        child: const CustomTextWidget(
-          text: Constants.Login,
-          color: ConstantColors.whiteColor,
-          size: 16,
-        ));
+    return loginController.isLoading
+        ? const Center(
+            child: CustomLoader(
+            color: Colors.red,
+          ))
+        : ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              backgroundColor: loginController.isButtonVisible
+                  ? ConstantColors.loginButtonColor
+                  : Colors.grey,
+            ),
+            onPressed: () =>  loginController.isButtonVisible
+                ? loginController.login()
+                : null,
+            child: const CustomTextWidget(
+              text: Constants.Login,
+              color:  ConstantColors.whiteColor,
+              size: 16,
+            ));
   }
 }

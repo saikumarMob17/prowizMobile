@@ -14,23 +14,126 @@ import 'package:prowiz/utils/storage_utils.dart';
 import 'package:prowiz/utils/strings.dart';
 
 class LoginController extends GetxController {
-  late TextEditingController email, password;
+  late TextEditingController emailController, passwordController;
 
-  var isLoading = false;
+  bool isLoading = false;
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  bool isButtonVisible = false;
+
+  String? emailError;
+  String? passwordError;
+  bool isPasswordObscured = true;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
 
-    email = TextEditingController();
-    password = TextEditingController();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+
+    //Add Listeners for input changes
+
+    // emailController.addListener(checkInput);
+    // passwordController.addListener(checkInput);
+  }
+
+  checkInput() {
+    isButtonVisible =
+        emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
+
+    update();
+  }
+
+  void emailValidation() {
+    emailError = _validateEmail(emailController.text.trim());
+
+    if (emailError != null) {
+      update();
+    }
+  }
+
+  void passwordValidation() {
+    passwordError =
+        passwordController.text.isEmpty ? "Password can not empty" : null;
+
+    if (passwordError != null) {
+      update();
+    }
+  }
+
+  // void validateInputs() {
+  //   emailError = _validateEmail(emailController.text);
+  //   passwordError =
+  //       passwordController.text.isEmpty ? "Password is required" : null;
+  //
+  //   if ((emailError == null) && (passwordError == null)) {
+  //     login();
+  //   } else {
+  //     update();
+  //   }
+  // }
+
+  String? _validateEmail(String email) {
+    if (email.isEmpty) {
+      return 'Email is required';
+    }
+
+    String pattern =
+        r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$';
+    RegExp regex = RegExp(pattern);
+    if (!regex.hasMatch(email)) {
+      return 'Enter a valid email address';
+    }
+    return null;
+  }
+
+  void login() async {
+    isLoading = true;
+
+    update();
+    try {
+      LoginResponseModel loginResponseModel = await getAccessToken(
+          emailController.text.trim(), passwordController.text.trim());
+
+      isLoading = false;
+      update();
+      if (loginResponseModel.accessToken.isNotEmpty) {
+        storageBox.write("accessToken", loginResponseModel.accessToken);
+
+        showCustomSnackBar(Constants.loginSuccess, title: "Login");
+
+        Get.to(const HomeScreen());
+      } else {
+        showCustomSnackBar(Constants.invalidEmailPassword, title: "Login");
+      }
+    } on Exception catch (e) {
+      isLoading = false;
+      update();
+      log("login error login ===> ${e.toString()}");
+      showCustomSnackBar("Something went wrong, please try again.",
+          title: e.toString());
+    }
+  }
+
+  void passwordVisibility() {
+    isPasswordObscured = !isPasswordObscured;
+
+    update();
   }
 
   Future<LoginResponseModel> getAccessToken(
       String? email, String password) async {
-    isLoading = true;
-
     try {
       if (kDebugMode) {
         log("getAccessToken ===> email===> password $email $password");
@@ -45,7 +148,6 @@ class LoginController extends GetxController {
         "password": password,
       });
 
-      isLoading = false;
       if (kDebugMode) {
         log("getAccessToken ===> response===> $response");
         log("getAccessToken LoginResponseModel data===> ${response?.data}");
@@ -58,18 +160,14 @@ class LoginController extends GetxController {
           log("getAccessToken ===> loginResponse===> $loginResponse");
           log("AccessToken===> ${loginResponse.accessToken}");
         }
-        storageBox.write("accessToken", loginResponse.accessToken);
-
-        Get.to(const HomeScreen());
-
-        showCustomSnackBar(Constants.loginSuccess, title: "Login");
 
         return loginResponse;
       } else {
         isLoading = false;
-        return LoginResponseModel(email: "", accessToken: "");
+        return LoginResponseModel(email: "valid", accessToken: "");
       }
     } on DioException catch (e) {
+      log("message ${e.toString()}");
       return LoginResponseModel.fromJson(e.response?.data);
     }
   }
