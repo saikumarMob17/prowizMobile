@@ -11,19 +11,24 @@ String loginResponseModelToJson(LoginResponseModel data) => json.encode(data.toJ
 class LoginResponseModel {
   String email;
   String accessToken;
+  String? message;
 
   LoginResponseModel({
     required this.email,
     required this.accessToken,
+    this.message
   });
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) => LoginResponseModel(
-    email: json["email"],
-    accessToken: json["accessToken"],
+    email: json["email"] ?? "",
+    accessToken: json["accessToken"] ?? "",
+    message: json['message'] ?? ""
+
   );
 
   Map<String, dynamic> toJson() => {
     "email": email,
     "accessToken": accessToken,
+    "message" : message,
   };
 }

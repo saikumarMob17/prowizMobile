@@ -3,14 +3,15 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prowiz/models/login_response.dart';
 import 'package:prowiz/network/api_services.dart';
 import 'package:prowiz/screens/home_screen.dart';
 import 'package:prowiz/screens/splash_screen.dart';
 import 'package:prowiz/utils/build_environments.dart';
+import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_snackbar.dart';
-import 'package:prowiz/utils/storage_utils.dart';
 import 'package:prowiz/utils/strings.dart';
 
 class LoginController extends GetxController {
@@ -44,8 +45,8 @@ class LoginController extends GetxController {
 
     //Add Listeners for input changes
 
-    // emailController.addListener(checkInput);
-    // passwordController.addListener(checkInput);
+    emailController.addListener(checkInput);
+    passwordController.addListener(checkInput);
   }
 
   checkInput() {
@@ -89,8 +90,7 @@ class LoginController extends GetxController {
       return 'Email is required';
     }
 
-    String pattern =
-        r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$';
+    String pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(email)) {
       return 'Enter a valid email address';
@@ -115,7 +115,10 @@ class LoginController extends GetxController {
 
         Get.to(const HomeScreen());
       } else {
-        showCustomSnackBar(Constants.invalidEmailPassword, title: "Login");
+        isLoading = false;
+        String errorMessage =
+            loginResponseModel.message ?? Constants.invalidEmailPassword;
+        showCustomSnackBar(errorMessage, title: "Login", color: Colors.redAccent, snackBarPosition: SnackPosition.BOTTOM);
       }
     } on Exception catch (e) {
       isLoading = false;
@@ -164,11 +167,14 @@ class LoginController extends GetxController {
         return loginResponse;
       } else {
         isLoading = false;
-        return LoginResponseModel(email: "valid", accessToken: "");
+        return LoginResponseModel(
+            email: "", accessToken: "", message: response?.data['message']);
       }
     } on DioException catch (e) {
       log("message ${e.toString()}");
-      return LoginResponseModel.fromJson(e.response?.data);
+      return LoginResponseModel.fromJson(
+        e.response?.data['message'],
+      );
     }
   }
 }
