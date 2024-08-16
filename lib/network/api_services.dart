@@ -3,8 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:prowiz/utils/build_environments.dart';
+import 'package:prowiz/utils/storage_utils.dart';
 
-var headers = {'Content-Type': 'application/json'};
+var headers = {'Content-Type': 'application/json',
+
+  "x-access-token" : StorageUtils.getAccessToken()
+};
+
+
 
 class ApiServices {
   static Dio? _dio;
@@ -39,7 +45,7 @@ class ApiServices {
       if (kDebugMode) {
         log("GET CALL");
 
-        log("Headers Model====> $headers");
+
         log("Request  URL $url");
       }
 
@@ -71,7 +77,7 @@ class ApiServices {
   }
 
   static Future<Response<dynamic>?> postApiCall(
-      {required String url, dynamic dataParams, Dio? dioInstance}) async {
+      {required String url, dynamic dataParams, Dio? dioInstance, required Map<String, String> headers}) async {
     if (dioInstance != null) {
       _dio = dioInstance;
     } else {
@@ -84,7 +90,7 @@ class ApiServices {
       if (kDebugMode) {
         log("POST CALL");
 
-        log("POST Headers Model====> $headers");
+        log("POST Headers Model====> ${headers}");
         log("POST Request  URL $url");
         log("POST Request  Data Params $dataParams");
       }

@@ -70,5 +70,8 @@ class Constants {
 
 
   static const parentLoginApi = "parentlogin/";
+  static const parentCamerasApi = "parentcamerasapi/";
+  static const accessToken = "accessToken";
+  static const email = "email";
 
 }

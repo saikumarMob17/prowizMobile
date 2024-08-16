@@ -40,8 +40,8 @@ class LoginController extends GetxController {
     // TODO: implement onInit
     super.onInit();
 
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
+    emailController = TextEditingController(text: "archana@coact.co.in");
+    passwordController = TextEditingController(text: "Coact@123");
 
     //Add Listeners for input changes
 
@@ -73,18 +73,6 @@ class LoginController extends GetxController {
     }
   }
 
-  // void validateInputs() {
-  //   emailError = _validateEmail(emailController.text);
-  //   passwordError =
-  //       passwordController.text.isEmpty ? "Password is required" : null;
-  //
-  //   if ((emailError == null) && (passwordError == null)) {
-  //     login();
-  //   } else {
-  //     update();
-  //   }
-  // }
-
   String? _validateEmail(String email) {
     if (email.isEmpty) {
       return 'Email is required';
@@ -109,7 +97,9 @@ class LoginController extends GetxController {
       isLoading = false;
       update();
       if (loginResponseModel.accessToken.isNotEmpty) {
-        storageBox.write("accessToken", loginResponseModel.accessToken);
+        storageBox.write(Constants.accessToken, loginResponseModel.accessToken);
+        storageBox.write(
+            Constants.email, loginResponseModel.email.split("@")[0]);
 
         showCustomSnackBar(Constants.loginSuccess, title: "Login");
 
@@ -118,7 +108,10 @@ class LoginController extends GetxController {
         isLoading = false;
         String errorMessage =
             loginResponseModel.message ?? Constants.invalidEmailPassword;
-        showCustomSnackBar(errorMessage, title: "Login", color: Colors.redAccent, snackBarPosition: SnackPosition.BOTTOM);
+        showCustomSnackBar(errorMessage,
+            title: "Login",
+            color: Colors.redAccent,
+            snackBarPosition: SnackPosition.BOTTOM);
       }
     } on Exception catch (e) {
       isLoading = false;
@@ -145,11 +138,15 @@ class LoginController extends GetxController {
       String loginUrlPath =
           BuildEnvironments.getBaseUrl() + Constants.parentLoginApi;
 
-      final response =
-          await ApiServices.postApiCall(url: loginUrlPath, dataParams: {
-        "email": email,
-        "password": password,
-      });
+      Map<String, String> headers = {'Content-Type': 'application/json'};
+
+      final response = await ApiServices.postApiCall(
+          url: loginUrlPath,
+          headers: headers,
+          dataParams: {
+            "email": email,
+            "password": password,
+          });
 
       if (kDebugMode) {
         log("getAccessToken ===> response===> $response");
