@@ -98,8 +98,7 @@ class LoginController extends GetxController {
       update();
       if (loginResponseModel.accessToken.isNotEmpty) {
         storageBox.write(Constants.accessToken, loginResponseModel.accessToken);
-        storageBox.write(
-            Constants.email, loginResponseModel.email.split("@")[0]);
+        storageBox.write(Constants.email, loginResponseModel.email);
 
         showCustomSnackBar(Constants.loginSuccess, title: "Login");
 

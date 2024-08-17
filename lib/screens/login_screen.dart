@@ -6,6 +6,7 @@ import 'package:prowiz/screens/home_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_loader.dart';
 import 'package:prowiz/utils/custom_text.dart';
+import 'package:prowiz/utils/global_theme.dart';
 import 'package:prowiz/utils/strings.dart';
 import 'package:prowiz/utils/images.dart';
 
@@ -16,8 +17,10 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ConstantColors.primaryColor,
+    final themeController = Get.find<ThemeController>();
+
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.isDarkMode.value ? ConstantColors.blackColor: ConstantColors.primaryColor,
       body: GetBuilder<LoginController>(
           init: loginController,
           builder: (_) {
@@ -61,8 +64,9 @@ class LoginScreen extends StatelessWidget {
               ),
             );
           }),
-    );
+    ));
   }
+
 
   var focusBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none);

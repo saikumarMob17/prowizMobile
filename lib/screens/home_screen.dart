@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:prowiz/screens/account.dart';
 import 'package:prowiz/screens/settings.dart';
 import 'package:prowiz/screens/tab1.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
+import 'package:prowiz/utils/global_theme.dart';
 import 'package:prowiz/utils/images.dart';
 import 'package:video_player/video_player.dart';
 
@@ -43,10 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
-
-
 
   @override
   void dispose() {
@@ -60,16 +59,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-
+    final themeController = Get.find<ThemeController>();
 
     final List<Widget> bottomBarPages = [
-      CameraScreen(controller1: _controller,),
-    //  const SettingScreen(),
-       AccountScreen(controller:_controller,),
+      CameraScreen(
+        controller1: _controller,
+      ),
+      //  const SettingScreen(),
+      AccountScreen(
+        controller: _controller,
+      ),
     ];
 
-    return Scaffold(
-      backgroundColor: ConstantColors.primaryColor,
+    return Obx(() => Scaffold(
+      backgroundColor: themeController.isDarkMode.value ? ConstantColors.blackColor : ConstantColors.primaryColor,
       bottomNavigationBar: (bottomBarPages.length <= maxCount)
           ? AnimatedNotchBottomBar(
         /// Provide NotchBottomBarController
@@ -84,41 +87,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
         /// restart app if you change removeMargins
         removeMargins: false,
-        bottomBarWidth: 300,
+        //bottomBarWidth: 300,
         showShadow: false,
+
         durationInMilliSeconds: 300,
 
         itemLabelStyle: const TextStyle(fontSize: 10),
 
         elevation: 1,
-        bottomBarItems:  [
+        bottomBarItems: [
           BottomBarItem(
-            inActiveItem: Image.asset(ConstantImages.bottomNavIcon1),
-            activeItem: Image.asset(ConstantImages.bottomNavIcon1),
+              inActiveItem: Image.asset(ConstantImages.bottomNavIcon1),
+              activeItem: Image.asset(ConstantImages.bottomNavIcon1),
               itemLabelWidget: const CustomTextWidget(
                 text: "Home",
                 color: ConstantColors.whiteColor,
                 size: 12,
                 fontWeight: FontWeight.w400,
-              )
-
-          ),
-
+              )),
           BottomBarItem(
-            inActiveItem: Image.asset(ConstantImages.bottomNavIcon2),
-            activeItem: Image.asset(ConstantImages.bottomNavIcon2),
-
-            itemLabelWidget: const CustomTextWidget(
-              text: "Account",
-              color: ConstantColors.whiteColor,
-              size: 12,
-              fontWeight: FontWeight.w400,
-            )
-
-
-
-          ),
-
+              inActiveItem: Image.asset(ConstantImages.bottomNavIcon2),
+              activeItem: Image.asset(ConstantImages.bottomNavIcon2),
+              itemLabelWidget: const CustomTextWidget(
+                text: "Account",
+                color: ConstantColors.whiteColor,
+                size: 12,
+                fontWeight: FontWeight.w400,
+              )),
         ],
         onTap: (index) {
           log('current selected index $index');
@@ -264,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //     ),
       //   ),
       // )
-    );
+    ));
   }
 
   _buildClassListTile(BuildContext context, String title,

@@ -3,11 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prowiz/screens/login_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
+import 'package:prowiz/utils/global_theme.dart';
 import 'package:prowiz/utils/images.dart';
 import 'package:prowiz/utils/strings.dart';
 
@@ -18,17 +20,22 @@ final storageBox= GetStorage();
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
+
+    final themeController = Get.find<ThemeController>();
     var welcomeFont = GoogleFonts.roboto(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: ConstantColors.textFieldColor);
     return SafeArea(
-      child: Scaffold(
+      child: Obx(() => Scaffold(
+        backgroundColor: themeController.isDarkMode.value ? ConstantColors.blackColor : ConstantColors.primaryColor,
         body: Container(
-          decoration: const BoxDecoration(
-              color: ConstantColors.primaryColor,
+          decoration:  BoxDecoration(
+              color:  ConstantColors.primaryColor,
               image: DecorationImage(
                   image: AssetImage(ConstantImages.splashBg),
                   fit: BoxFit.fill)),
@@ -39,8 +46,8 @@ class SplashScreen extends StatelessWidget {
                   children: [
                     const WidgetSpan(
                         child: SizedBox(
-                      width: 5,
-                    )),
+                          width: 5,
+                        )),
                     TextSpan(
                         text: Constants.login,
                         recognizer: TapGestureRecognizer()
@@ -90,13 +97,13 @@ class SplashScreen extends StatelessWidget {
                   const SizedBox(
                     height: 47,
                   ),
-                   const CustomTextWidget(
+                  const CustomTextWidget(
                     text: Constants.helloWelcome,
                     color: ConstantColors.whiteColor,
                     size: 24,
                     fontWeight: FontWeight.w400,
                   ),
-                   const CustomTextWidget(
+                  const CustomTextWidget(
                     text: Constants.ccTvLiveDesc,
                     color: Colors.white,
                     size: 24,
@@ -116,7 +123,7 @@ class SplashScreen extends StatelessWidget {
 
                   CustomTextWidget(
 
-                      text: Constants.readMoreDesc,
+                    text: Constants.readMoreDesc,
                     textAlign: TextAlign.justify,
                     fontWeight: FontWeight.w400,
                     size: 12,
@@ -132,7 +139,7 @@ class SplashScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 }

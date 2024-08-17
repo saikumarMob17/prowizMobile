@@ -3,10 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:prowiz/screens/splash_screen.dart';
+import 'package:prowiz/utils/global_theme.dart';
 
 void main() async{
 
   await GetStorage.init();
+
+  final themeController = Get.put(ThemeController());
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -18,10 +21,14 @@ void main() async{
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return  const GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
-    );
+    return  Obx(() {
+      final themeController = Get.find<ThemeController>();
+      return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: themeController.themeData,
+        home: SplashScreen(),
+      );
+    });
   }
 }
 
