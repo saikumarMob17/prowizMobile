@@ -76,5 +76,6 @@ class Constants {
   static const email = "email";
   static const logout = "Logout";
   static const submit = "Submit";
+  static const isLoggedIn = "isLoggedIn";
 
 }

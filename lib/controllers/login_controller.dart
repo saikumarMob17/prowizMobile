@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:prowiz/models/login_response.dart';
 import 'package:prowiz/network/api_services.dart';
 import 'package:prowiz/screens/home_screen.dart';
+import 'package:prowiz/screens/intro_screen.dart';
 import 'package:prowiz/screens/splash_screen.dart';
 import 'package:prowiz/utils/build_environments.dart';
 import 'package:prowiz/utils/custom_snackbar.dart';
@@ -98,6 +99,7 @@ class LoginController extends GetxController {
         storageBox.write(Constants.accessToken, loginResponseModel.accessToken);
         storageBox.write(Constants.email, loginResponseModel.email);
 
+        storageBox.write(Constants.isLoggedIn, true);
         showCustomSnackBar(Constants.loginSuccess, title: "Login");
 
         Get.to(const HomeScreen());

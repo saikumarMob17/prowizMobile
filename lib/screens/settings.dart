@@ -39,38 +39,52 @@ class CameraScreen extends StatelessWidget {
                       height: Get.width * 0.2,
                       width: Get.width * 0.2,
                     ),
-                    TextField(
+                    Obx(() => TextField(
                       controller: textController,
                       textInputAction: TextInputAction.done,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: Constants.enterLocationCode,
-                        labelStyle: TextStyle(color: Colors.white),
-                        enabledBorder: OutlineInputBorder(
+                        suffixIcon: camerasController.locationCode.value.isNotEmpty ?IconButton(
+                            onPressed: () {
+                              textController.clear();
+                              camerasController.locationCode.value = "";
+                              camerasController.camerasList.clear();
+                              camerasController.subgroups.clear();
+                              camerasController.videoUrls.clear();
+                            },
+                            icon: const Icon(
+                              Icons.close,
+                              color: ConstantColors.whiteColor,
+                            )) : null,
+                        labelStyle: const TextStyle(color: Colors.white),
+                        enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: ConstantColors.textFieldColor),
+                          BorderSide(color: ConstantColors.textFieldColor),
                         ),
                       ),
                       style: const TextStyle(color: Colors.white),
                       onChanged: (value) {
                         camerasController.locationCode.value = value;
+                        camerasController.update();
                       },
-                    ),
+                    )),
                     const SizedBox(height: 16),
                     Obx(() => ElevatedButton(
-                          onPressed: camerasController.locationCode.value.isEmpty
-                              ? () {}
-                              : () {
-                                  camerasController.fetchCameras(
-                                      camerasController.locationCode.value);
-                                },
+                          onPressed:
+                              (camerasController.locationCode.value.isEmpty)
+                                  ? () {}
+                                  : () {
+                                      camerasController.fetchCameras(
+                                          camerasController.locationCode.value);
+                                    },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  camerasController.locationCode.value.isEmpty
-                                      ? ConstantColors.whiteColor.withOpacity(0.3)
-                                      : ConstantColors.whiteColor),
+                              backgroundColor: camerasController
+                                      .locationCode.value.isEmpty
+                                  ? ConstantColors.whiteColor.withOpacity(0.3)
+                                  : ConstantColors.whiteColor),
                           child: const CustomTextWidget(
                             text: Constants.submit,
                             fontWeight: FontWeight.w400,
@@ -78,178 +92,188 @@ class CameraScreen extends StatelessWidget {
                           ),
                         )),
                     const SizedBox(height: 16),
-                   Visibility(
-                     visible: camerasController.locationCode.value.isNotEmpty,
-                     child:  Obx(() {
-                     if (camerasController.isLoading.value) {
-                       return const Center(child: CircularProgressIndicator());
-                     }
+                    Obx(() {
+                      if (camerasController.isLoading.value) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                     if (camerasController.camerasList.isNotEmpty) {
-                       return Expanded(
-                         child: Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           children: [
-                             const CustomTextWidget(text: "Group ", color: ConstantColors.whiteColor,),
-                             const SizedBox(height: 10,),
-                             Container(
-                               padding: const EdgeInsets.symmetric(
-                                   horizontal: 12.0, vertical: 8.0),
-                               decoration: BoxDecoration(
-                                 color: ConstantColors.buttonColor,
-                                 borderRadius: BorderRadius.circular(8.0),
-                               ),
-                               child: DropdownButton<int>(
-                                 value:
-                                 camerasController.selectedGroupIndex.value,
-                                 onChanged: (int? newValue) {
-                                   if (newValue != null) {
-                                     camerasController.selectedGroupIndex.value =
-                                         newValue;
-                                     camerasController.updateSubgroups();
-                                     camerasController.selectedSubgroupIndex
-                                         .value = 0; // Reset to first subgroup
-                                     camerasController
-                                         .fetchSubgroupVideos(); // Fetch videos for the default subgroup
-                                   }
-                                 },
-                                 dropdownColor: Colors.blue[800],
-                                 iconEnabledColor: Colors.white,
-                                 items: List.generate(
-                                   camerasController.camerasList.length,
-                                       (index) => DropdownMenuItem<int>(
-                                     value: index,
-                                     child: Text(
-                                       camerasController
-                                           .camerasList[index].groupId,
-                                       style:
-                                       const TextStyle(color: Colors.white),
-                                     ),
-                                   ),
-                                 ),
-                                 isExpanded: true,
-                                 underline: const SizedBox(),
-                               ),
-                             ),
-                             const SizedBox(height: 16),
-                             const CustomTextWidget(text: "Sub Group ", color: ConstantColors.whiteColor,),
-                             const SizedBox(height: 10,),
-                             Obx(() {
-                               if (camerasController.subgroups.isNotEmpty) {
-                                 return Container(
-                                   padding: const EdgeInsets.symmetric(
-                                       horizontal: 12.0, vertical: 8.0),
-                                   decoration: BoxDecoration(
-                                     color: ConstantColors.buttonColor,
-                                     borderRadius: BorderRadius.circular(8.0),
-                                   ),
-                                   child: DropdownButton<int>(
-                                     value: camerasController
-                                         .selectedSubgroupIndex.value,
-                                     onChanged: (int? newValue) {
-                                       if (newValue != null) {
-                                         camerasController.selectedSubgroupIndex
-                                             .value = newValue;
-                                         camerasController
-                                             .fetchSubgroupVideos(); // Fetch videos for the selected subgroup
-                                       }
-                                     },
-                                     dropdownColor: Colors.blue[800],
-                                     iconEnabledColor: Colors.white,
-                                     items: List.generate(
-                                       camerasController.subgroups.length,
-                                           (index) => DropdownMenuItem<int>(
-                                         value: index,
-                                         child: Text(
-                                           camerasController
-                                               .subgroups[index].subgroupId,
-                                           style: const TextStyle(
-                                               color: Colors.white),
-                                         ),
-                                       ),
-                                     ),
-                                     isExpanded: true,
-                                     underline: const SizedBox(),
-                                   ),
-                                 );
-                               } else {
-                                 return Container();
-                               }
-                             }),
-                             const SizedBox(height: 16),
-                             Obx(() {
-                               return camerasController.videoUrls.isEmpty
-                                   ? const Center(
-                                 child: CustomTextWidget(
-                                   text:
-                                   "No videos found for this camera. Please select another.",
-                                   color: ConstantColors.whiteColor,
-                                 ),
-                               )
-                                   : Expanded(
-                                 child: GridView.builder(
-                                   physics:
-                                   const NeverScrollableScrollPhysics(),
-                                   itemCount:
-                                   camerasController.videoUrls.length,
-                                   shrinkWrap: true,
-                                   gridDelegate:
-                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                     crossAxisSpacing: 27,
-                                     mainAxisSpacing: 34,
-                                     crossAxisCount: 2,
-                                   ),
-                                   itemBuilder: (context, index) {
-                                     final video = camerasController
-                                         .videoUrls[index];
+                      if (camerasController.camerasList.isNotEmpty) {
+                        return Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CustomTextWidget(
+                                text: "Group ",
+                                color: ConstantColors.whiteColor,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 8.0),
+                                decoration: BoxDecoration(
+                                  color: ConstantColors.buttonColor,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: DropdownButton<int>(
+                                  value: camerasController
+                                      .selectedGroupIndex.value,
+                                  onChanged: (int? newValue) {
+                                    if (newValue != null) {
+                                      camerasController
+                                          .selectedGroupIndex.value = newValue;
+                                      camerasController.updateSubgroups();
+                                      camerasController.selectedSubgroupIndex
+                                          .value = 0; // Reset to first subgroup
+                                      camerasController
+                                          .fetchSubgroupVideos(); // Fetch videos for the default subgroup
+                                    }
+                                  },
+                                  dropdownColor: Colors.blue[800],
+                                  iconEnabledColor: Colors.white,
+                                  items: List.generate(
+                                    camerasController.camerasList.length,
+                                    (index) => DropdownMenuItem<int>(
+                                      value: index,
+                                      child: Text(
+                                        camerasController
+                                            .camerasList[index].groupId,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  isExpanded: true,
+                                  underline: const SizedBox(),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              const CustomTextWidget(
+                                text: "Sub Group ",
+                                color: ConstantColors.whiteColor,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Obx(() {
+                                if (camerasController.subgroups.isNotEmpty) {
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0, vertical: 8.0),
+                                    decoration: BoxDecoration(
+                                      color: ConstantColors.buttonColor,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: DropdownButton<int>(
+                                      value: camerasController
+                                          .selectedSubgroupIndex.value,
+                                      onChanged: (int? newValue) {
+                                        if (newValue != null) {
+                                          camerasController
+                                              .selectedSubgroupIndex
+                                              .value = newValue;
+                                          camerasController
+                                              .fetchSubgroupVideos(); // Fetch videos for the selected subgroup
+                                        }
+                                      },
+                                      dropdownColor: Colors.blue[800],
+                                      iconEnabledColor: Colors.white,
+                                      items: List.generate(
+                                        camerasController.subgroups.length,
+                                        (index) => DropdownMenuItem<int>(
+                                          value: index,
+                                          child: Text(
+                                            camerasController
+                                                .subgroups[index].subgroupId,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                      isExpanded: true,
+                                      underline: const SizedBox(),
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }),
+                              const SizedBox(height: 16),
+                              Obx(() {
+                                return camerasController.videoUrls.isEmpty
+                                    ? const Center(
+                                        child: CustomTextWidget(
+                                          text:
+                                              "No videos found for this camera. Please select another.",
+                                          color: ConstantColors.whiteColor,
+                                        ),
+                                      )
+                                    : Expanded(
+                                        child: GridView.builder(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: camerasController
+                                              .videoUrls.length,
+                                          shrinkWrap: true,
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisSpacing: 27,
+                                            mainAxisSpacing: 34,
+                                            crossAxisCount: 2,
+                                          ),
+                                          itemBuilder: (context, index) {
+                                            final video = camerasController
+                                                .videoUrls[index];
 
-                                     log("Video URL is ===> ${video["url"]!}");
-                                     return InkWell(
-                                       onTap: () {
-                                         Navigator.push(
-                                             context,
-                                             MaterialPageRoute(
-                                                 builder: (context) =>
-                                                     VideoScreen(
-                                                       url: video["url"]!,
-                                                     )));
-                                       },
-                                       child: Stack(
-                                         alignment: Alignment.center,
-                                         fit: StackFit.expand,
-                                         children: [
-                                           Image.asset(
-                                               ConstantImages.homeImage),
-                                           const Positioned(
-                                             left: 0,
-                                             right: 0,
-                                             top: 0,
-                                             bottom: 0,
-                                             child: Icon(
-                                               Icons.play_arrow,
-                                               color: Colors.white,
-                                               size: 36,
-                                             ),
-                                           ),
-                                         ],
-                                       ),
-                                     );
-                                   },
-                                 ),
-                               );
-                             }),
-                           ],
-                         ),
-                       );
-                     }
+                                            log("Video URL is ===> ${video["url"]!}");
+                                            return InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            VideoScreen(
+                                                              url:
+                                                                  video["url"]!,
+                                                            )));
+                                              },
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                fit: StackFit.expand,
+                                                children: [
+                                                  Image.asset(
+                                                      ConstantImages.homeImage),
+                                                  const Positioned(
+                                                    left: 0,
+                                                    right: 0,
+                                                    top: 0,
+                                                    bottom: 0,
+                                                    child: Icon(
+                                                      Icons.play_arrow,
+                                                      color: Colors.white,
+                                                      size: 36,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                              }),
+                            ],
+                          ),
+                        );
+                      }
 
-                     if (camerasController.errorMessage.isNotEmpty) {
-                       return Text(camerasController.errorMessage.value,
-                           style: const TextStyle(color: Colors.white));
-                     }
+                      if (camerasController.errorMessage.isNotEmpty) {
+                        return Text(camerasController.errorMessage.value,
+                            style: const TextStyle(color: Colors.white));
+                      }
 
-                     return Container();
-                   }),)
+                      return Container();
+                    })
                   ],
                 ),
               ),

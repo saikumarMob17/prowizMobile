@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:prowiz/screens/intro_screen.dart';
 import 'package:prowiz/screens/splash_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_text.dart';
@@ -128,7 +129,8 @@ class AccountScreen extends StatelessWidget {
                       onPressed: () {
                         storageBox.remove(Constants.accessToken);
                         storageBox.remove(Constants.email);
-                        Get.to(const SplashScreen());
+                        storageBox.remove(Constants.isLoggedIn);
+                        Get.to(const IntroScreen());
                       },
                       child: const CustomTextWidget(
                         text: Constants.logout,

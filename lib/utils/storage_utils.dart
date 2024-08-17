@@ -21,4 +21,14 @@ class StorageUtils {
     return email;
 
   }
+
+  static bool getLoggedIn() {
+
+    bool isLoggedIn = storageBox.read(Constants.isLoggedIn) ?? false;
+
+
+    return isLoggedIn;
+
+
+  }
 }
