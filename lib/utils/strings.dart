@@ -74,5 +74,7 @@ class Constants {
   static const parentCamerasApi = "parentcamerasapi/";
   static const accessToken = "accessToken";
   static const email = "email";
+  static const logout = "Logout";
+  static const submit = "Submit";
 
 }

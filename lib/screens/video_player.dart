@@ -16,16 +16,15 @@ class VideoScreen extends StatelessWidget {
     final String decodedUrl = Uri.decodeComponent(url);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('HLS Video Player'),
-      ),
       body: Center(
         child: AspectRatio(
           aspectRatio: 16 / 9,
           child: BetterPlayer.network(
+
             decodedUrl,
             betterPlayerConfiguration: const BetterPlayerConfiguration(
               fit: BoxFit.cover,
+
 
               aspectRatio: 16 / 9,
 

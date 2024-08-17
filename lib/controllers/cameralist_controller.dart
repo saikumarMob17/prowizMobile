@@ -21,6 +21,10 @@ class CamerasController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
+    camerasList.clear();
+    videoUrls.clear();
+    subgroups.clear();
+
     String camerasUrlPath = BuildEnvironments.getBaseUrl() + Constants.parentCamerasApi;
 
     Map<String, String> headers = {

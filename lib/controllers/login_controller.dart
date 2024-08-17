@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +9,6 @@ import 'package:prowiz/network/api_services.dart';
 import 'package:prowiz/screens/home_screen.dart';
 import 'package:prowiz/screens/splash_screen.dart';
 import 'package:prowiz/utils/build_environments.dart';
-import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_snackbar.dart';
 import 'package:prowiz/utils/strings.dart';
 
