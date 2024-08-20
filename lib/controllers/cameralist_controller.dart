@@ -21,9 +21,6 @@ class CamerasController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
-    camerasList.clear();
-    videoUrls.clear();
-    subgroups.clear();
 
     String camerasUrlPath = BuildEnvironments.getBaseUrl() + Constants.parentCamerasApi;
 
@@ -50,7 +47,7 @@ class CamerasController extends GetxController {
         errorMessage.value = 'Error parsing data';
       }
     } else {
-      errorMessage.value = 'Error: ${response?.statusCode}';
+      errorMessage.value = 'The location code seems incorrect. Please verify it.';
     }
 
     isLoading.value = false;

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:prowiz/screens/intro_screen.dart';
 import 'package:prowiz/screens/splash_screen.dart';
 import 'package:prowiz/utils/colors.dart';
+import 'package:prowiz/utils/custom_dialog.dart';
 import 'package:prowiz/utils/custom_text.dart';
 import 'package:prowiz/utils/global_theme.dart';
 import 'package:prowiz/utils/images.dart';
@@ -33,7 +34,7 @@ class AccountScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       InkWell(
-                        onTap: () => Get.back(),
+                        onTap: () => onWillPop(context),
                         child: const CircleAvatar(
                           radius: 15,
                           backgroundColor: ConstantColors.buttonColor,
