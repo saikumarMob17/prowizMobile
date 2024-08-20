@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:prowiz/screens/intro_screen.dart';
+import 'package:prowiz/screens/login_screen.dart';
 import 'package:prowiz/screens/splash_screen.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_dialog.dart';
@@ -21,6 +21,42 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.put(ThemeController());
+
+    Future<bool?> showLogoutConfirmationDialog(BuildContext context) {
+      return showDialog<bool>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: CustomTextWidget(
+                      text: Constants.logoutTitle,
+                      color: ConstantColors.blackColor,
+                    )),
+                content: const Text(Constants.logoutDesc),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(Constants.btnText1),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      storageBox.remove(Constants.accessToken);
+                      storageBox.remove(Constants.email);
+                      storageBox.remove(Constants.isLoggedIn);
+
+                      Get.offAll(LoginScreen(),);
+                    },
+                    child: const Text(Constants.btnText2),
+                  ),
+                ],
+              );
+            },
+          ) ??
+          Future.value(false);
+    }
 
     return SafeArea(
       child: Obx(() => Scaffold(
@@ -59,19 +95,21 @@ class AccountScreen extends StatelessWidget {
                 ),
               ),
               toolbarHeight: 35,
-
-
-
               backgroundColor: Colors.transparent,
-
             ),
             body: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(ConstantImages.logo,fit: BoxFit.cover,height: 80,),
-                  SizedBox(height: 20,),
+                  Image.asset(
+                    ConstantImages.logo,
+                    fit: BoxFit.cover,
+                    height: 80,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     height: 90,
                     width: 90,
@@ -127,12 +165,7 @@ class AccountScreen extends StatelessWidget {
                           backgroundColor: ConstantColors.buttonColor,
                           minimumSize:
                               Size(Get.width * 0.5, Get.height * 0.05)),
-                      onPressed: () {
-                        storageBox.remove(Constants.accessToken);
-                        storageBox.remove(Constants.email);
-                        storageBox.remove(Constants.isLoggedIn);
-                        Get.to(const IntroScreen());
-                      },
+                      onPressed: () => showLogoutConfirmationDialog(context),
                       child: const CustomTextWidget(
                         text: Constants.logout,
                         size: 14,

@@ -4,6 +4,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:prowiz/controllers/cameralist_controller.dart';
 import 'package:prowiz/screens/account.dart';
 import 'package:prowiz/screens/settings.dart';
 import 'package:prowiz/screens/tab1.dart';
@@ -23,19 +24,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _pageController = PageController(initialPage: 0);
 
-  final NotchBottomBarController _controller =
-      NotchBottomBarController(index: 0);
+
 
   int maxCount = 2;
 
-  final List<String> listOfItems = [
-    "Library",
-    "Play Area",
-    "Play Group",
-    "COMMON AREAS",
-  ];
-  String? selectedValue;
-  int currentPageIndex = 0;
+
 
   late ChewieController chewieController;
   late VideoPlayerController _videoPlayerController;
@@ -60,23 +53,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     final themeController = Get.find<ThemeController>();
+    final homeController = Get.put(CamerasController());
+
+    log("homeController.notchBottomBarController.value ===> ${homeController.notchBottomBarController.value}");
 
     final List<Widget> bottomBarPages = [
       CameraScreen(
-        controller1: _controller,
+        controller1: homeController.notchBottomBarController.value,
       ),
       //  const SettingScreen(),
       AccountScreen(
-        controller: _controller,
+        controller: homeController.notchBottomBarController.value,
       ),
     ];
 
     return Obx(() => Scaffold(
       backgroundColor: themeController.isDarkMode.value ? ConstantColors.blackColor : ConstantColors.primaryColor,
       bottomNavigationBar: (bottomBarPages.length <= maxCount)
-          ? AnimatedNotchBottomBar(
+          ? Obx(() => AnimatedNotchBottomBar(
         /// Provide NotchBottomBarController
-        notchBottomBarController: _controller,
+        notchBottomBarController: homeController.notchBottomBarController.value,
         color: ConstantColors.loginButtonColor,
         showLabel: true,
         textOverflow: TextOverflow.visible,
@@ -120,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _pageController.jumpToPage(index);
         },
         kIconSize: 24.0,
-      )
+      ))
           : null,
 
       body: PageView(

@@ -126,7 +126,7 @@ class LoginScreen extends StatelessWidget {
     return loginController.isLoading
         ? const Center(
             child: CustomLoader(
-            color: Colors.red,
+
           ))
         : ElevatedButton(
             style: ElevatedButton.styleFrom(

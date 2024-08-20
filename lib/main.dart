@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: themeController.themeData,
-        home:  const IntroScreen(),
+        home:   SplashScreen(),
       );
     });
   }

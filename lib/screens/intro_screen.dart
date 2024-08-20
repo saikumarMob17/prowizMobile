@@ -13,17 +13,11 @@ import 'package:prowiz/utils/global_theme.dart';
 import 'package:prowiz/utils/images.dart';
 import 'package:prowiz/utils/strings.dart';
 
-
-
-
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
-
     final themeController = Get.find<ThemeController>();
     var welcomeFont = GoogleFonts.roboto(
         fontSize: 16,
@@ -31,114 +25,112 @@ class IntroScreen extends StatelessWidget {
         color: ConstantColors.textFieldColor);
     return SafeArea(
       child: Obx(() => Scaffold(
-        backgroundColor: themeController.isDarkMode.value ? ConstantColors.blackColor : ConstantColors.primaryColor,
-        body: Container(
-          decoration:  BoxDecoration(
-              color:  ConstantColors.primaryColor,
-              image: DecorationImage(
-                  image: AssetImage(ConstantImages.splashBg),
-                  fit: BoxFit.fill)),
-          child: Center(
-            child: RichText(
-              text: TextSpan(
-                  text: Constants.welcomeText,
-                  children: [
-                    const WidgetSpan(
-                        child: SizedBox(
+            backgroundColor: themeController.isDarkMode.value
+                ? ConstantColors.blackColor
+                : ConstantColors.primaryColor,
+            body: Container(
+              decoration: const BoxDecoration(
+                  color: ConstantColors.primaryColor,
+                  image: DecorationImage(
+                      image: AssetImage(ConstantImages.splashBg),
+                      fit: BoxFit.fill)),
+              child: Center(
+                child: RichText(
+                  text: TextSpan(
+                      text: Constants.welcomeText,
+                      children: [
+                        const WidgetSpan(
+                            child: SizedBox(
                           width: 5,
                         )),
-                    TextSpan(
-                        text: Constants.login,
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
-                          },
-                        style: welcomeFont)
-                  ],
-                  style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w400, fontSize: 16)),
+                        TextSpan(
+                            text: Constants.login,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginScreen()));
+                              },
+                            style: welcomeFont)
+                      ],
+                      style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w400, fontSize: 16)),
+                ),
+              ),
             ),
-          ),
-        ),
-        bottomSheet: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-          decoration: const BoxDecoration(
-              color: ConstantColors.splashBgColor,
-              image: DecorationImage(
-                  image: AssetImage(
-                    ConstantImages.bottomSheetBG,
-                  ),
-                  fit: BoxFit.fill),
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(22), topLeft: Radius.circular(22))),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
+            bottomSheet: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              decoration: const BoxDecoration(
+                  color: ConstantColors.splashBgColor,
+                  image: DecorationImage(
+                      image: AssetImage(
+                        ConstantImages.bottomSheetBG,
+                      ),
+                      fit: BoxFit.fill),
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(22),
+                      topLeft: Radius.circular(22))),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: 3,
-                      width: 53,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(22)),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 47,
-                  ),
-                  const CustomTextWidget(
-                    text: Constants.helloWelcome,
-                    color: ConstantColors.whiteColor,
-                    size: 24,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  const CustomTextWidget(
-                    text: Constants.ccTvLiveDesc,
-                    color: Colors.white,
-                    size: 24,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  richTextWidget(Constants.readMore, "",
-                      isIcon: true,
-                      sizedBoxValue: 3,
-                      fontSize: 13,
-                      content1Color: ConstantColors.textFieldColor),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  CustomTextWidget(
-
-                    text: Constants.readMoreDesc,
-                    textAlign: TextAlign.justify,
-                    fontWeight: FontWeight.w400,
-                    size: 12,
-                    color: ConstantColors.whiteColor.withOpacity(0.5),
-
-
-                  ),
-                  const SizedBox(
-                    height: 20,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          height: 3,
+                          width: 53,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(22)),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 47,
+                      ),
+                      const CustomTextWidget(
+                        text: Constants.helloWelcome,
+                        color: ConstantColors.whiteColor,
+                        size: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      const CustomTextWidget(
+                        text: Constants.ccTvLiveDesc,
+                        color: Colors.white,
+                        size: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      richTextWidget(Constants.readMore, "",
+                          isIcon: true,
+                          sizedBoxValue: 3,
+                          fontSize: 13,
+                          content1Color: ConstantColors.textFieldColor),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextWidget(
+                        text: Constants.readMoreDesc,
+                        textAlign: TextAlign.justify,
+                        fontWeight: FontWeight.w400,
+                        size: 12,
+                        color: ConstantColors.whiteColor.withOpacity(0.5),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-      )),
+            ),
+          )),
     );
   }
 }

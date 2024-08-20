@@ -1,4 +1,5 @@
 
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:prowiz/models/cameras_list_model.dart';
@@ -15,7 +16,12 @@ class CamerasController extends GetxController {
   var selectedGroupIndex = 0.obs; // For tracking the selected group
   var selectedSubgroupIndex = 0.obs; // For tracking the selected subgroup
   var videoUrls = <Map<String, String>>[].obs; // Store video URLs
-  var subgroups = <SubgroupId>[].obs; // List of subgroups
+  var subgroups = <SubgroupId>[].obs;
+
+  // List of subgroups
+
+  final Rx<NotchBottomBarController> notchBottomBarController =
+  NotchBottomBarController(index: 0).obs;
 
   Future<void> fetchCameras(String locationCode) async {
     isLoading.value = true;

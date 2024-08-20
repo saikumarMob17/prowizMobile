@@ -34,12 +34,11 @@ class SplashScreen extends StatelessWidget {
 
     Future.delayed(const Duration(seconds: 2), () {
       if (StorageUtils.getLoggedIn()) {
-        Get.to(CameraScreen(
-          controller1: NotchBottomBarController(index: 0),
+        Get.offAll(const HomeScreen(
         ));
       }
       else {
-        Get.to(const IntroScreen());
+        Get.offAll(const IntroScreen());
       }
     });
 

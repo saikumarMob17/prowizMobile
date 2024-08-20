@@ -6,7 +6,6 @@ import 'package:prowiz/controllers/cameralist_controller.dart';
 import 'package:prowiz/screens/video_player.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:get/get.dart';
-import 'package:prowiz/utils/custom_dialog.dart';
 import 'package:prowiz/utils/custom_text.dart';
 import 'package:prowiz/utils/global_theme.dart';
 import 'package:prowiz/utils/images.dart';
