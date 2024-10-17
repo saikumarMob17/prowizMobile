@@ -5,7 +5,7 @@ void showCustomSnackBar(String message,{String? title, Color? color, SnackPositi
   Get.snackbar(
     title ?? "",
     message,
-    duration: const Duration(seconds: 3),
+    duration: const Duration(seconds: 1),
     snackPosition:snackBarPosition ??  SnackPosition.TOP,
     backgroundColor: color ?? Colors.green,
     colorText: Colors.white,

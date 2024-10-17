@@ -1,8 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:prowiz/controllers/login_controller.dart';
 import 'package:prowiz/screens/home_screen.dart';
+import 'package:prowiz/screens/registration_page.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_loader.dart';
 import 'package:prowiz/utils/custom_text.dart';
@@ -58,6 +61,9 @@ class LoginScreen extends StatelessWidget {
                         height: 30,
                       ),
                       submitButton(context),
+                      const SizedBox(height: 40,),
+                      registerWidget(),
+
                     ],
                   ),
                 ),
@@ -146,5 +152,29 @@ class LoginScreen extends StatelessWidget {
               color:  ConstantColors.whiteColor,
               size: 16,
             ));
+  }
+
+  registerWidget() {
+
+    TextStyle defaultStyle =const TextStyle(color: ConstantColors.whiteColor, fontSize: 14, fontWeight: FontWeight.w600);
+    TextStyle linkTextStyle =const  TextStyle(color: ConstantColors.loginButtonColor, fontSize: 14, fontWeight: FontWeight.w600);
+
+
+    return RichText(text: TextSpan(
+      style: defaultStyle,
+      children: [
+        const TextSpan(text:  Constants.needAnAccount),
+
+        const WidgetSpan(child: SizedBox(width: 5,)),
+        TextSpan(text: Constants.register, style: linkTextStyle,
+        recognizer: TapGestureRecognizer()..onTap = () {
+
+          Get.to( RegistrationPage());
+
+        })
+      ]
+    ));
+
+
   }
 }

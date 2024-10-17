@@ -110,7 +110,9 @@ class LoginController extends GetxController {
         showCustomSnackBar(errorMessage,
             title: "Login",
             color: Colors.redAccent,
-            snackBarPosition: SnackPosition.BOTTOM);
+            snackBarPosition: SnackPosition.BOTTOM,
+
+        );
       }
     } on Exception catch (e) {
       isLoading = false;

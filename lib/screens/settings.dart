@@ -67,6 +67,10 @@ class CameraScreen extends StatelessWidget {
                       Obx(() => TextField(
                         controller: textController,
                         textInputAction: TextInputAction.done,
+                        onSubmitted: (value){
+                          FocusScope.of(context).unfocus();
+                        },
+                        autofocus: true,
                         decoration: InputDecoration(
                           labelText: Constants.enterLocationCode,
                           suffixIcon: camerasController.locationCode.value.isNotEmpty ?IconButton(
@@ -103,6 +107,7 @@ class CameraScreen extends StatelessWidget {
                                 (camerasController.locationCode.value.isEmpty)
                                     ? () {}
                                     : () {
+                              FocusScope.of(context).unfocus();
                                         camerasController.fetchCameras(
                                             camerasController.locationCode.value);
                                       },

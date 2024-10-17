@@ -14,21 +14,15 @@ class StorageUtils {
   }
 
   static String email() {
-
     String? email = storageBox.read(Constants.email);
 
-    if(email == null) throw Exception("Email is not available");
+    if (email == null) throw Exception("Email is not available");
     return email;
-
   }
 
   static bool getLoggedIn() {
-
     bool isLoggedIn = storageBox.read(Constants.isLoggedIn) ?? false;
 
-
     return isLoggedIn;
-
-
   }
 }
