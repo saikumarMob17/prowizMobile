@@ -75,6 +75,8 @@ class Constants {
 
   static const parentLoginApi = "parentlogin/";
   static const parentCamerasApi = "parentcamerasapi/";
+  static const registerApi = "https://events.coact.live/klay/register.php";
+  static const customerLoginApi = "https://events.coact.live/klay/login.php";
   static const accessToken = "accessToken";
   static const email = "email";
   static const logout = "Logout";
@@ -83,8 +85,11 @@ class Constants {
   static const needAnAccount = "Need an Account?";
   static const register = "Register";
   static const registerAnAccount = "Register";
-  static const centerId = "CenterId";
+  static const centerId = "CenterId (Optional)";
   static const location = "Location";
+  static const passwordEmpty = "Password can not empty";
+  static const userNameEmpty = "UserName can not empty";
+  static const locationEmpty = "Location can not empty";
 }
 
 

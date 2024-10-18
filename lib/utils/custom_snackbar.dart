@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void showCustomSnackBar(String message,{String? title, Color? color, SnackPosition? snackBarPosition}) {
+void showCustomSnackBar(String message,{String? title, Color? color, SnackPosition? snackBarPosition, bool isSuccess = false}) {
   Get.snackbar(
     title ?? "",
     message,
@@ -11,7 +11,7 @@ void showCustomSnackBar(String message,{String? title, Color? color, SnackPositi
     colorText: Colors.white,
     borderRadius: 10,
     margin: const EdgeInsets.all(10),
-    icon: const Icon(
+    icon: isSuccess ? const Icon(Icons.done_outline,color: Colors.white,): const Icon(
       Icons.error,
       color: Colors.white,
     ),

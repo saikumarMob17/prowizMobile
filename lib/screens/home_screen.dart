@@ -30,22 +30,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-  late ChewieController chewieController;
-  late VideoPlayerController _videoPlayerController;
+  //late ChewieController chewieController;
+ // late VideoPlayerController _videoPlayerController;
   int? bufferDelay;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+  //  _videoPlayerController = VideoPlayerController();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _videoPlayerController.dispose();
-    chewieController.dispose();
+   // _videoPlayerController.dispose();
+   // chewieController.dispose();
     _pageController.dispose();
   }
 

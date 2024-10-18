@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:prowiz/models/login_response.dart';
 import 'package:prowiz/network/api_services.dart';
 import 'package:prowiz/screens/home_screen.dart';
-import 'package:prowiz/screens/intro_screen.dart';
 import 'package:prowiz/screens/splash_screen.dart';
 import 'package:prowiz/utils/build_environments.dart';
 import 'package:prowiz/utils/custom_snackbar.dart';
@@ -65,7 +64,7 @@ class LoginController extends GetxController {
 
   void passwordValidation() {
     passwordError =
-        passwordController.text.isEmpty ? "Password can not empty" : null;
+        passwordController.text.isEmpty ? Constants.passwordEmpty : null;
 
     if (passwordError != null) {
       update();
@@ -136,8 +135,8 @@ class LoginController extends GetxController {
         log("getAccessToken ===> email===> password $email $password");
       }
 
-      String loginUrlPath =
-          BuildEnvironments.getBaseUrl() + Constants.parentLoginApi;
+      String loginUrlPath = Constants.customerLoginApi;
+      //String loginUrlPath = BuildEnvironments.getBaseUrl() + Constants.parentLoginApi;
 
       Map<String, String> headers = {'Content-Type': 'application/json'};
 
@@ -145,7 +144,9 @@ class LoginController extends GetxController {
           url: loginUrlPath,
           headers: headers,
           dataParams: {
-            "email": email,
+           // "email": email,
+            "loginField": email,
+
             "password": password,
           });
 
