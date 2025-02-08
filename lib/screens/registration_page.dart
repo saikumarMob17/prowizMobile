@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gcaptcha_v3/recaptca_config.dart';
+import 'package:flutter_gcaptcha_v3/web_view.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:prowiz/controllers/registration_controller.dart';
@@ -63,6 +65,11 @@ class RegistrationPage extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
+
+                          // recpatchaWidget(),
+                          // const SizedBox(
+                          //   height: 10,
+                          // ),
                           submitButton(context),
                         ],
                       ),
@@ -191,4 +198,36 @@ class RegistrationPage extends StatelessWidget {
               size: 16,
             ));
   }
+
+  recpatchaWidget() {
+
+    return Column(
+      children: [
+        ReCaptchaWebView(
+          width: 200,
+          height: 22,
+          webViewColor: null,
+          onTokenReceived: _onTokenReceived,
+          url: 'https://www.google.com/recaptcha/api/siteverify',
+        ),
+        ElevatedButton(
+          onPressed: execute,
+          child: const Text('submit'),
+        )
+      ],
+    );
+  }
+
+  /// STEP: 3
+  /// After calling [RecaptchaHandler.executeV3()] you will receive the [token]
+  /// Verify your Token using the server
+
+  _onTokenReceived(String token) {
+    print("FINAL TOKEN===> $token");
+  }
+
+  /// STEP: 2
+  /// Execute the Recaptcha V3  using this method call
+
+  void execute() => RecaptchaHandler.executeV3();
 }

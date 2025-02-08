@@ -8,6 +8,11 @@ import Flutter
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+      
+      // Add the code to prevent screenshots
+            if let window = self.window {
+                window.isHidden = true
+            }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

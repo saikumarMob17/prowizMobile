@@ -95,8 +95,7 @@ class ApiServices {
         log("POST Request  Data Params $dataParams");
       }
 
-      final response = await _dio?.post(url,
-          data: dataParams, options: Options(headers: headers));
+      final response = await Dio().post(url, data: dataParams, options: Options(headers: headers));
 
       if (kDebugMode) {
         log("Post Response ====> $response");
@@ -105,6 +104,9 @@ class ApiServices {
 
       return response;
     } on DioException catch (error) {
+
+      if (kDebugMode) log("DIO Exception Response ===> ${error.toString()}");
+
       if (error.response?.statusCode == 401) {
         /////// Call Token Refresh method
 

@@ -1,10 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:prowiz/controllers/login_controller.dart';
-import 'package:prowiz/screens/home_screen.dart';
 import 'package:prowiz/screens/registration_page.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_loader.dart';
@@ -14,13 +13,20 @@ import 'package:prowiz/utils/strings.dart';
 import 'package:prowiz/utils/images.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+   LoginScreen({super.key});
 
   final LoginController loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
+
+
+    Map<String, dynamic> arguments=  Get.arguments ?? "";
+
+    String email = arguments['email'] ?? "";
+    String password = arguments['password'] ?? "";
+
 
     return Obx(() => Scaffold(
       backgroundColor: themeController.isDarkMode.value ? ConstantColors.blackColor: ConstantColors.primaryColor,
@@ -52,17 +58,17 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(
                         height: 28,
                       ),
-                      userNameField(),
+                      userNameField(email),
                       const SizedBox(
                         height: 15,
                       ),
-                      passwordField(),
+                      passwordField(password),
                       const SizedBox(
                         height: 30,
                       ),
                       submitButton(context),
                       const SizedBox(height: 40,),
-                      registerWidget(),
+                     // registerWidget(),
 
                     ],
                   ),
@@ -81,10 +87,14 @@ class LoginScreen extends StatelessWidget {
 
   var hintTextStyle =
       const TextStyle(fontSize: 12, color: ConstantColors.blackColor);
-  userNameField() {
+  userNameField(String email) {
+
+    loginController.emailController.text = email;
+
     return TextFormField(
       controller: loginController.emailController,
       onChanged:(value) {
+        log("value ===> $value");
         loginController.emailValidation();
       },
       decoration: InputDecoration(
@@ -99,7 +109,11 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  passwordField() {
+  passwordField(String password) {
+
+    loginController.passwordController.text = password;
+
+
     return TextFormField(
       controller: loginController.passwordController,
       obscureText: loginController.isPasswordObscured,
@@ -129,7 +143,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   submitButton(BuildContext context) {
-    return loginController.isLoading
+    return loginController.isLoading.value
         ? const Center(
             child: CustomLoader(
 

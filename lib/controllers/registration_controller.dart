@@ -108,19 +108,10 @@ class RegistrationController extends GetxController {
       update();
 
       if (response.isNotEmpty) {
+        Get.snackbar("Register", response.toString());
 
-        showCustomSnackBar(
-          response,
-          title: "Register",
-          color: Colors.green,
-
-          isSuccess: true,
-          snackBarPosition: SnackPosition.TOP,
-        );
-
-        Get.to(LoginScreen());
-
-
+        Get.to(LoginScreen(),
+            arguments: {"email": email.text, "password": password.text});
       } else {
         isLoading = false;
 
@@ -165,8 +156,6 @@ class RegistrationController extends GetxController {
       }
 
       if (response?.statusCode == 200) {
-
-
         String registerMessage = jsonDecode(response?.data)['message'] ?? "";
 
         return registerMessage;

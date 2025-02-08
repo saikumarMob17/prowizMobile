@@ -16,15 +16,19 @@ import 'package:prowiz/utils/images.dart';
 import 'package:prowiz/utils/strings.dart';
 
 class CameraScreen extends StatelessWidget {
-  CameraScreen({super.key, required this.controller1});
+  CameraScreen({super.key, required this.controller1, required this.camerasController});
 
   final NotchBottomBarController controller1;
+  final LoginController camerasController;
 
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
 
-    final LoginController camerasController = Get.find<LoginController>();
+
+    log("cameraList value is ===> ${camerasController.camerasList}");
+
+   // final camerasController = Get.put(LoginController());
 
     Future<bool> _onWillPop() async {
       return (await showDialog(
@@ -108,7 +112,7 @@ class CameraScreen extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       const CustomTextWidget(
-                                        text: "Group ",
+                                        text: Constants.className,
                                         color: ConstantColors.whiteColor,
                                       ),
                                       const SizedBox(
@@ -165,7 +169,7 @@ class CameraScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 16),
                                       const CustomTextWidget(
-                                        text: "Sub Group ",
+                                        text: Constants.selectionName,
                                         color: ConstantColors.whiteColor,
                                       ),
                                       const SizedBox(

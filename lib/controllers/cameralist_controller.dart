@@ -1,15 +1,18 @@
 
+
+import 'dart:developer';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
+import 'package:prowiz/controllers/login_controller.dart';
 import 'package:prowiz/models/cameras_list_model.dart';
+import 'package:prowiz/models/login_response.dart';
 import 'package:prowiz/network/api_services.dart';
 import 'package:prowiz/utils/build_environments.dart';
 import 'package:prowiz/utils/storage_utils.dart';
 import 'package:prowiz/utils/strings.dart';
 
 class CamerasController extends GetxController {
-  var camerasList = <CamerasListModel>[].obs;
+  var camerasList = <Camera>[].obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var locationCode = ''.obs;
@@ -28,33 +31,36 @@ class CamerasController extends GetxController {
     errorMessage.value = '';
 
 
-    String camerasUrlPath = BuildEnvironments.getBaseUrl() + Constants.parentCamerasApi;
+    // String camerasUrlPath = BuildEnvironments.getBaseUrl() + Constants.parentCamerasApi;
+    //
+    // Map<String, String> headers = {
+    //   'Content-Type': 'application/json',
+    //   "x-access-token": StorageUtils.getAccessToken()
+    // };
+    //
+    // final response = await ApiServices.postApiCall(
+    //     url: camerasUrlPath,
+    //     headers: headers,
+    //     dataParams: {
+    //       "locationcode": locationCode,
+    //     });
 
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      "x-access-token": StorageUtils.getAccessToken()
-    };
 
-    final response = await ApiServices.postApiCall(
-        url: camerasUrlPath,
-        headers: headers,
-        dataParams: {
-          "locationcode": locationCode,
-        });
-
-    if (response?.statusCode == 200) {
       try {
-        camerasList.value = List<CamerasListModel>.from(
-            response?.data.map((json) => CamerasListModel.fromJson(json))
-        );
+        // camerasList.value = List<Camera>.from(response?.data.map((json) => Camera.fromJson(json))
+        // );
+        isLoading.value = true;
+        camerasList.value= Get.find<LoginController>().loginResponseModel.cameras;
+
+        log("CameraList value ===> ${camerasList[0].groupId}");
         updateSubgroups();
         fetchSubgroupVideos(); // Fetch videos for the default subgroup
       } catch (e) {
         errorMessage.value = 'Error parsing data';
       }
-    } else {
-      errorMessage.value = 'The location code seems incorrect. Please verify it.';
-    }
+    // } else {
+    //   errorMessage.value = 'The location code seems incorrect. Please verify it.';
+    // }
 
     isLoading.value = false;
   }

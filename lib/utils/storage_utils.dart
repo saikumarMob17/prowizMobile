@@ -25,4 +25,13 @@ class StorageUtils {
 
     return isLoggedIn;
   }
+
+
+  static bool loginType() {
+
+    bool isLoggedInType = storageBox.read(Constants.loginType) ?? false;
+
+    return isLoggedInType;
+
+  }
 }

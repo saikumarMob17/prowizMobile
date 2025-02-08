@@ -82,6 +82,8 @@ class Constants {
   static const logout = "Logout";
   static const submit = "Submit";
   static const isLoggedIn = "isLoggedIn";
+  static const isUserData = "isUserData";
+  static const locationCode = "locationCode";
   static const needAnAccount = "Need an Account?";
   static const register = "Register";
   static const registerAnAccount = "Register";
@@ -90,6 +92,9 @@ class Constants {
   static const passwordEmpty = "Password can not empty";
   static const userNameEmpty = "UserName can not empty";
   static const locationEmpty = "Location can not empty";
+  static const loginType = "login_type";
+  static const className = "Class Name";
+  static const selectionName = "Section Name";
 }
 
 

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:prowiz/controllers/login_controller.dart';
 import 'package:prowiz/screens/login_screen.dart';
 import 'package:prowiz/screens/splash_screen.dart';
 import 'package:prowiz/utils/colors.dart';
@@ -14,13 +15,17 @@ import 'package:prowiz/utils/storage_utils.dart';
 import 'package:prowiz/utils/strings.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key, required this.controller});
+  const AccountScreen({super.key, required this.controller, required this.loginController});
 
   final NotchBottomBarController controller;
+  final LoginController loginController;
 
   @override
   Widget build(BuildContext context) {
+
+
     final ThemeController themeController = Get.put(ThemeController());
+   // final LoginController loginController = Get.put(LoginController());
 
     Future<bool?> showLogoutConfirmationDialog(BuildContext context) {
       return showDialog<bool>(
@@ -43,11 +48,14 @@ class AccountScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      storageBox.remove(Constants.accessToken);
-                      storageBox.remove(Constants.email);
-                      storageBox.remove(Constants.isLoggedIn);
+                      storageBox.erase();
+                     // storageBox.remove(Constants.accessToken);
+                      controller.index= 0;
 
-                      Get.offAll(LoginScreen(),);
+                      Get.offAll(
+                        LoginScreen(),
+                        arguments: {"email" : Get.find<LoginController>().emailController.text, "password": Get.find<LoginController>().passwordController.text}
+                      );
                     },
                     child: const Text(Constants.btnText2),
                   ),
@@ -160,7 +168,7 @@ class AccountScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton(
+                  !StorageUtils.getLoggedIn() ?   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: ConstantColors.buttonColor,
                           minimumSize:
@@ -170,7 +178,7 @@ class AccountScreen extends StatelessWidget {
                         text: Constants.logout,
                         size: 14,
                         color: ConstantColors.whiteColor,
-                      ))
+                      ))  : SizedBox(),
                 ],
               ),
             ),
