@@ -52,9 +52,10 @@ class AccountScreen extends StatelessWidget {
                      // storageBox.remove(Constants.accessToken);
                       controller.index= 0;
 
+                      loginController.passwordController.clear();
+                      loginController.emailController.clear();
                       Get.offAll(
                         LoginScreen(),
-                        arguments: {"email" : Get.find<LoginController>().emailController.text, "password": Get.find<LoginController>().passwordController.text}
                       );
                     },
                     child: const Text(Constants.btnText2),
@@ -168,7 +169,7 @@ class AccountScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  !StorageUtils.getLoggedIn() ?   ElevatedButton(
+                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: ConstantColors.buttonColor,
                           minimumSize:
@@ -178,7 +179,7 @@ class AccountScreen extends StatelessWidget {
                         text: Constants.logout,
                         size: 14,
                         color: ConstantColors.whiteColor,
-                      ))  : SizedBox(),
+                      )) ,
                 ],
               ),
             ),

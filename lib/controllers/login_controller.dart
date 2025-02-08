@@ -78,11 +78,8 @@ class LoginController extends GetxController {
         // Decode JSON string to Map
         Map<String, dynamic> jsonData = storedUserData;
 
-
-
         // Convert to model
         loginResponseModel = LoginResponseModel.fromJson(jsonData);
-
 
         // Update values
         camerasList.value = loginResponseModel.cameras;
@@ -91,9 +88,6 @@ class LoginController extends GetxController {
 
         updateSubgroups();
         fetchSubgroupVideos();
-
-
-
 
         log("User Data Loaded Successfully: ${camerasList}");
       } catch (e) {
@@ -104,7 +98,7 @@ class LoginController extends GetxController {
 
   checkInput() {
     isButtonVisible =
-        emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
+          (emailError ==null) && passwordController.text.isNotEmpty;
 
     update();
   }
@@ -248,9 +242,27 @@ class LoginController extends GetxController {
         });
 
     if (kDebugMode) {
-      log("getAccessToken111111 ===> response===> ${response!.statusCode}");
+      log("getAccessToken111111 ===> response===> ${response!.data}");
     }
     try {
+      if ((response?.statusCode == 200) &&
+          (response?.data != null) &&
+          (jsonDecode(response?.data).containsKey("error"))) {
+        // ErrorResponse errorResponse = ErrorResponse.fromJson(response?.data);
+
+        log("errorResponse ===> ${response?.data.runtimeType}");
+
+        Map<String, dynamic> jsonResponse = jsonDecode(response?.data);
+        isLoading.value = false;
+        update();
+
+        showCustomSnackBar(jsonResponse['error'],title: "Login",
+            isSuccess: false,
+            snackBarPosition: SnackPosition.BOTTOM,
+
+            color: Colors.red);
+      }
+
       if (response?.statusCode == 200 && response?.data != null) {
         loginResponseModel = loginResponseModelFromJson(response?.data);
 
@@ -275,7 +287,6 @@ class LoginController extends GetxController {
 
           storageBox.write(Constants.locationCode, locationController.text);
 
-
           if (kDebugMode) {
             log("getAccessToken ===> loginResponse===> $loginResponseModel");
             log("AccessToken===> ${loginResponseModel.user}");
@@ -283,12 +294,10 @@ class LoginController extends GetxController {
 
           camerasList.value = loginResponseModel.cameras;
 
-          Future.delayed(Duration( milliseconds: 300), () {
+          Future.delayed(Duration(milliseconds: 300), () {
             updateSubgroups();
             fetchSubgroupVideos();
           });
-          
-
         }
 
         return loginResponseModel;

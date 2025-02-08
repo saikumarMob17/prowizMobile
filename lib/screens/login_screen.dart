@@ -22,10 +22,12 @@ class LoginScreen extends StatelessWidget {
     final themeController = Get.find<ThemeController>();
 
 
-    Map<String, dynamic> arguments=  Get.arguments ?? "";
 
-    String email = arguments['email'] ?? "";
-    String password = arguments['password'] ?? "";
+
+    // Map<String, dynamic> arguments=  Get.arguments ?? "";
+    //
+    // String email = arguments['email'] ?? "";
+    // String password = arguments['password'] ?? "";
 
 
     return Obx(() => Scaffold(
@@ -58,11 +60,11 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(
                         height: 28,
                       ),
-                      userNameField(email),
+                      userNameField(),
                       const SizedBox(
                         height: 15,
                       ),
-                      passwordField(password),
+                      passwordField(),
                       const SizedBox(
                         height: 30,
                       ),
@@ -87,9 +89,9 @@ class LoginScreen extends StatelessWidget {
 
   var hintTextStyle =
       const TextStyle(fontSize: 12, color: ConstantColors.blackColor);
-  userNameField(String email) {
+  userNameField() {
 
-    loginController.emailController.text = email;
+   // loginController.emailController.text = email;
 
     return TextFormField(
       controller: loginController.emailController,
@@ -109,9 +111,9 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  passwordField(String password) {
+  passwordField() {
 
-    loginController.passwordController.text = password;
+   // loginController.passwordController.text = password;
 
 
     return TextFormField(

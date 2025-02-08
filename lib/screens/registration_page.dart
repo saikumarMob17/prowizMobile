@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gcaptcha_v3/recaptca_config.dart';
 import 'package:flutter_gcaptcha_v3/web_view.dart';
@@ -37,7 +38,7 @@ class RegistrationPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          customImage(),
+                          customImage(height: Get.height * 0.08),
                           const SizedBox(
                             height: 20,
                           ),
@@ -66,11 +67,15 @@ class RegistrationPage extends StatelessWidget {
                             height: 10,
                           ),
 
-                          // recpatchaWidget(),
+                          recaptchaWidget(context),
                           // const SizedBox(
                           //   height: 10,
                           // ),
-                          submitButton(context),
+                          // (registerController.captchaController.text
+                          //             .toUpperCase() ==
+                          //         registerController.captchaText.value)
+                          //     ? submitButton(context)
+                          //     : SizedBox(),
                         ],
                       ),
                     ),
@@ -183,12 +188,12 @@ class RegistrationPage extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              backgroundColor: registerController.isButtonVisible
+              backgroundColor: registerController.isButtonVisible.value
                   ? ConstantColors.loginButtonColor
                   : Colors.grey,
             ),
             onPressed: () {
-              registerController.isButtonVisible
+              registerController.isButtonVisible.value
                   ? registerController.registerAccount()
                   : null;
             },
@@ -199,35 +204,81 @@ class RegistrationPage extends StatelessWidget {
             ));
   }
 
-  recpatchaWidget() {
-
-    return Column(
+  recaptchaWidget(BuildContext context) {
+    return Obx(() => Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ReCaptchaWebView(
-          width: 200,
-          height: 22,
-          webViewColor: null,
-          onTokenReceived: _onTokenReceived,
-          url: 'https://www.google.com/recaptcha/api/siteverify',
+        Container(
+          width: Get.width * 0.75,
+          height: Get.height * 0.06,
+          decoration: BoxDecoration(
+              color: ConstantColors.whiteColor,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: const [
+                 BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)
+              ]
+          ),
+          child: Row(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                registerController.captchaText.value,
+                style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 4,
+                    fontStyle: FontStyle.italic),
+              ),
+
+              if (!registerController.isVerified.value)
+                Expanded(
+                  child: TextButton(
+                    onPressed: registerController.generateCaptcha,
+                    child: const CustomTextWidget(
+                      text: 'Reload CAPTCHA 🔄',
+                      size: 12,
+                      color: ConstantColors.loginButtonColor,
+                    ),
+                  ),
+                ),
+
+
+            ],
+          ),
         ),
+
+        const SizedBox(height: 30),
+        TextField(
+          readOnly: registerController.isVerified.value,
+          controller: registerController.captchaController,
+          style: const TextStyle(color: Colors.white),
+          decoration:  InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText:  'Enter CAPTCHA',
+              suffixIcon: registerController.isVerified.value ? const Icon(Icons.verified,color: Colors.green,) : null
+          ),
+        ),
+         SizedBox(height: registerController.isVerified.value ? 0: 20),
         ElevatedButton(
-          onPressed: execute,
-          child: const Text('submit'),
-        )
+
+          onPressed: registerController.isVerified.value
+              ? null
+              : registerController.validateCaptcha,
+          style: ElevatedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 48),
+              backgroundColor: registerController.isVerified.value
+                  ? Colors.green
+                  : ConstantColors.loginButtonColor),
+          child: CustomTextWidget(text: registerController.isVerified.value
+              ? ""
+              : 'Verify',),
+        ),
+
+        registerController.isVerified.value ? submitButton(context) : const SizedBox(),
+
       ],
-    );
+    ));
   }
 
-  /// STEP: 3
-  /// After calling [RecaptchaHandler.executeV3()] you will receive the [token]
-  /// Verify your Token using the server
-
-  _onTokenReceived(String token) {
-    print("FINAL TOKEN===> $token");
-  }
-
-  /// STEP: 2
-  /// Execute the Recaptcha V3  using this method call
-
-  void execute() => RecaptchaHandler.executeV3();
 }
