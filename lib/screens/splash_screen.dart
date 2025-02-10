@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:prowiz/screens/home_screen.dart';
+import 'package:prowiz/screens/login_screen.dart';
 import 'package:prowiz/screens/registration_page.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/images.dart';
@@ -29,7 +30,7 @@ class SplashScreen extends StatelessWidget {
         Get.to( const HomeScreen());
       }
       else {
-        Get.offAll(RegistrationPage());
+        Get.offAll(LoginScreen());
       }
     });
   }

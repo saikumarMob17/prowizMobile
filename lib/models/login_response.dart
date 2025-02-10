@@ -66,7 +66,7 @@ class LoginResponseModel {
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
       LoginResponseModel(
-        message: json["message"],
+        message: json["message"] ?? "test",
         user: User.fromJson(json["user"]),
         cameras: json['cameras'] is List
             ? List<Camera>.from(json["cameras"].map((x) => Camera.fromJson(x)))

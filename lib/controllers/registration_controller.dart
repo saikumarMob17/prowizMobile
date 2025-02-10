@@ -21,9 +21,7 @@ class RegistrationController extends GetxController {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? emailError, passwordError, userNameError, locationCodeError;
-  RxString captchaText = ''.obs;
-  late TextEditingController captchaController;
-  RxBool isVerified = false.obs;
+
 
   @override
   void onInit() {
@@ -35,44 +33,16 @@ class RegistrationController extends GetxController {
     password = TextEditingController();
     centerId = TextEditingController();
     locationCode = TextEditingController();
-    captchaController = TextEditingController();
 
     email.addListener(checkInput);
     password.addListener(checkInput);
     userName.addListener(checkInput);
     locationCode.addListener(checkInput);
-    generateCaptcha();
   }
 
-  void generateCaptcha() {
-
-    if(isVerified.value){
-      return;
-
-    }
-
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Avoid similar characters
-    Random random = Random();
-
-    captchaText.value = List.generate(5, (index) => chars[random.nextInt(chars.length)]).join();
-    update();
-
-  }
-
-  void validateCaptcha() {
-    if (captchaController.text.toUpperCase() == captchaText.value) {
-      isVerified.value = true;
-      checkInput();
-      update();
-      ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('CAPTCHA Matched ✅')));
 
 
-    } else {
-      ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Incorrect CAPTCHA ❌')));
-      generateCaptcha(); // Refresh CAPTCHA on failure
-      captchaController.clear();
-    }
-  }
+
 
 
 
@@ -81,7 +51,7 @@ class RegistrationController extends GetxController {
     isButtonVisible.value = email.text.isNotEmpty &&
         userName.text.isNotEmpty &&
         locationCode.text.isNotEmpty &&
-        password.text.isNotEmpty && isVerified.value;
+        password.text.isNotEmpty;
     update();
   }
 

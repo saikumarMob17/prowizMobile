@@ -54,6 +54,10 @@ class AccountScreen extends StatelessWidget {
 
                       loginController.passwordController.clear();
                       loginController.emailController.clear();
+                      loginController.captchaController.clear();
+                      loginController.isVerified.value = false;
+                      loginController.generateCaptcha();
+                     // loginController.captchaText.value = "";
                       Get.offAll(
                         LoginScreen(),
                       );

@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gcaptcha_v3/recaptca_config.dart';
-import 'package:flutter_gcaptcha_v3/web_view.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:prowiz/controllers/registration_controller.dart';
 import 'package:prowiz/utils/colors.dart';
 import 'package:prowiz/utils/custom_loader.dart';
@@ -67,15 +64,10 @@ class RegistrationPage extends StatelessWidget {
                             height: 10,
                           ),
 
-                          recaptchaWidget(context),
+                          //recaptchaWidget(context),
                           // const SizedBox(
                           //   height: 10,
-                          // ),
-                          // (registerController.captchaController.text
-                          //             .toUpperCase() ==
-                          //         registerController.captchaText.value)
-                          //     ? submitButton(context)
-                          //     : SizedBox(),
+                        submitButton(context),
                         ],
                       ),
                     ),
@@ -194,7 +186,7 @@ class RegistrationPage extends StatelessWidget {
             ),
             onPressed: () {
               registerController.isButtonVisible.value
-                  ? registerController.registerAccount()
+                  ?  registerController.registerAccount()
                   : null;
             },
             child: const CustomTextWidget(
@@ -204,81 +196,6 @@ class RegistrationPage extends StatelessWidget {
             ));
   }
 
-  recaptchaWidget(BuildContext context) {
-    return Obx(() => Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          width: Get.width * 0.75,
-          height: Get.height * 0.06,
-          decoration: BoxDecoration(
-              color: ConstantColors.whiteColor,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: const [
-                 BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)
-              ]
-          ),
-          child: Row(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                registerController.captchaText.value,
-                style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 4,
-                    fontStyle: FontStyle.italic),
-              ),
 
-              if (!registerController.isVerified.value)
-                Expanded(
-                  child: TextButton(
-                    onPressed: registerController.generateCaptcha,
-                    child: const CustomTextWidget(
-                      text: 'Reload CAPTCHA 🔄',
-                      size: 12,
-                      color: ConstantColors.loginButtonColor,
-                    ),
-                  ),
-                ),
-
-
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 30),
-        TextField(
-          readOnly: registerController.isVerified.value,
-          controller: registerController.captchaController,
-          style: const TextStyle(color: Colors.white),
-          decoration:  InputDecoration(
-              border: const OutlineInputBorder(),
-              labelText:  'Enter CAPTCHA',
-              suffixIcon: registerController.isVerified.value ? const Icon(Icons.verified,color: Colors.green,) : null
-          ),
-        ),
-         SizedBox(height: registerController.isVerified.value ? 0: 20),
-        ElevatedButton(
-
-          onPressed: registerController.isVerified.value
-              ? null
-              : registerController.validateCaptcha,
-          style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 48),
-              backgroundColor: registerController.isVerified.value
-                  ? Colors.green
-                  : ConstantColors.loginButtonColor),
-          child: CustomTextWidget(text: registerController.isVerified.value
-              ? ""
-              : 'Verify',),
-        ),
-
-        registerController.isVerified.value ? submitButton(context) : const SizedBox(),
-
-      ],
-    ));
-  }
 
 }

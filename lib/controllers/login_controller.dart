@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:developer' as logs;
+import 'dart:math';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:prowiz/models/login_response.dart';
 import 'package:prowiz/network/api_services.dart';
 import 'package:prowiz/screens/home_screen.dart';
@@ -18,7 +16,8 @@ import 'package:prowiz/utils/strings.dart';
 class LoginController extends GetxController {
   late TextEditingController emailController,
       passwordController,
-      locationController;
+      locationController,
+      captchaController;
 
   RxBool isLoading = false.obs;
   var camerasList = <Camera>[].obs;
@@ -28,6 +27,8 @@ class LoginController extends GetxController {
   var selectedSubgroupIndex = 0.obs; // For tracking the selected subgroup
   var videoUrls = <Map<String, String>>[].obs; // Store video URLs
   var subgroups = <SubgroupId>[].obs;
+  RxString captchaText = "".obs;
+  RxBool isVerified = false.obs;
 
   final Rx<NotchBottomBarController> notchBottomBarController =
       NotchBottomBarController(index: 0).obs;
@@ -57,21 +58,60 @@ class LoginController extends GetxController {
     emailController = TextEditingController();
     passwordController = TextEditingController();
     locationController = TextEditingController();
+    captchaController = TextEditingController();
 
     //Add Listeners for input changes
 
     emailController.addListener(checkInput);
     passwordController.addListener(checkInput);
+    captchaController.addListener(checkInput);
     loadUserData();
 
-    //  getAccessToken(emailController.text.trim(), passwordController.text.trim());
+    //TODO For generating the Captcha Text
+    generateCaptcha();
+
+  }
+
+  void generateCaptcha() {
+    if (isVerified.value) {
+      return;
+    }
+
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+    Random random = Random();
+
+    captchaText.value =
+        List.generate(5, (index) => chars[random.nextInt(chars.length)]).join();
+
+    update();
+  }
+
+  void validateCaptcha(BuildContext context) {
+    if ((captchaController.text.toUpperCase().trim() == captchaText.value.trim())) {
+      isVerified.value = true;
+      checkInput();
+      update();
+     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("'CAPTCHA Matched ✅'")));
+      login();
+    } else {
+
+      if(!isButtonVisible) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("'Incorrect CAPTCHA ❌'")));
+      generateCaptcha();
+      captchaController.clear();
+    }
   }
 
   void loadUserData() {
     var storedUserData = storageBox.read(Constants.isUserData);
 
-    log("storedUserData Type is===> ${storedUserData.runtimeType}");
-    log("storedUserData===> ${storedUserData}");
+    logs.log("storedUserData Type is===> ${storedUserData.runtimeType}");
+    logs.log("storedUserData===> $storedUserData");
 
     if (storedUserData != null) {
       try {
@@ -89,16 +129,18 @@ class LoginController extends GetxController {
         updateSubgroups();
         fetchSubgroupVideos();
 
-        log("User Data Loaded Successfully: ${camerasList}");
+        logs.log("User Data Loaded Successfully: $camerasList");
       } catch (e) {
-        log("Error loading user data: $e");
+        logs.log("Error loading user data: $e");
       }
     }
   }
 
   checkInput() {
-    isButtonVisible =
-          (emailError ==null) && passwordController.text.isNotEmpty;
+
+    logs.log("Email Error ===> $emailError");
+    logs.log("Email ISButtonVisible ===> $isButtonVisible");
+    isButtonVisible = ((emailError == null) && (emailController.text.isNotEmpty)) && (passwordController.text.isNotEmpty) && (captchaController.value.text.isNotEmpty);
 
     update();
   }
@@ -166,8 +208,12 @@ class LoginController extends GetxController {
         showCustomSnackBar(Constants.loginSuccess, title: "Login");
         Get.offAll(HomeScreen());
       } else {
-        log("ELSE error login ===> ");
+        logs.log("ELSE error login ===> ${loginResponseModel.message}");
         isLoading.value = false;
+        isVerified.value = false;
+        generateCaptcha();
+        captchaController.clear();
+
         String errorMessage =
             loginResponseModel.message ?? Constants.invalidEmailPassword;
         showCustomSnackBar(
@@ -178,7 +224,7 @@ class LoginController extends GetxController {
         );
       }
     } on Exception catch (e) {
-      log("login error login ===> ${e.toString()}");
+      logs.log("login error login ===> ${e.toString()}");
       isLoading.value = false;
       update();
 
@@ -224,7 +270,7 @@ class LoginController extends GetxController {
   Future<LoginResponseModel> getAccessToken(
       String? email, String password) async {
     if (kDebugMode) {
-      log("getAccessToken ===> email===> password $email $password");
+      logs.log("getAccessToken ===> email===> password $email $password");
     }
 
     String loginUrlPath = Constants.customerLoginApi;
@@ -242,7 +288,7 @@ class LoginController extends GetxController {
         });
 
     if (kDebugMode) {
-      log("getAccessToken111111 ===> response===> ${response!.data}");
+      logs.log("getAccessToken111111 ===> response===> ${response!.data}");
     }
     try {
       if ((response?.statusCode == 200) &&
@@ -250,17 +296,22 @@ class LoginController extends GetxController {
           (jsonDecode(response?.data).containsKey("error"))) {
         // ErrorResponse errorResponse = ErrorResponse.fromJson(response?.data);
 
-        log("errorResponse ===> ${response?.data.runtimeType}");
+        logs.log("errorResponse ===> ${response?.data.runtimeType}");
 
         Map<String, dynamic> jsonResponse = jsonDecode(response?.data);
         isLoading.value = false;
         update();
 
-        showCustomSnackBar(jsonResponse['error'],title: "Login",
-            isSuccess: false,
-            snackBarPosition: SnackPosition.BOTTOM,
+        // showCustomSnackBar(jsonResponse['error'],
+        //     title: "Login",
+        //     isSuccess: false,
+        //     snackBarPosition: SnackPosition.BOTTOM,
+        //     color: Colors.red);
 
-            color: Colors.red);
+        return LoginResponseModel(
+            message: jsonResponse['error'],
+            user: User(id: "", username: "", email: "", locationCode: ""),
+            cameras: []);
       }
 
       if (response?.statusCode == 200 && response?.data != null) {
@@ -271,7 +322,7 @@ class LoginController extends GetxController {
         //
         //   ErrorResponse errorResponse = ErrorResponse.fromJson(response?.data);
         //
-        //   log("errorResponse ===> $errorResponse");
+        //   logs.log("errorResponse ===> $errorResponse");
         //
         // }
 
@@ -280,7 +331,7 @@ class LoginController extends GetxController {
         } else {
           isLoading.value = false;
 
-          log("test123444");
+          logs.log("test123444");
           camerasList.value = loginResponseModel.cameras;
 
           locationController.text = loginResponseModel.user.locationCode;
@@ -288,8 +339,9 @@ class LoginController extends GetxController {
           storageBox.write(Constants.locationCode, locationController.text);
 
           if (kDebugMode) {
-            log("getAccessToken ===> loginResponse===> $loginResponseModel");
-            log("AccessToken===> ${loginResponseModel.user}");
+            logs.log(
+                "getAccessToken ===> loginResponse===> $loginResponseModel");
+            logs.log("AccessToken===> ${loginResponseModel.user}");
           }
 
           camerasList.value = loginResponseModel.cameras;
@@ -304,7 +356,7 @@ class LoginController extends GetxController {
       } else {
         isLoading.value = false;
 
-        log("ISERROR");
+        logs.log("ISERROR");
         return LoginResponseModel(
             message: "",
             user: User(id: "", username: "", email: "", locationCode: ""),
@@ -316,7 +368,7 @@ class LoginController extends GetxController {
         //     message: "");
       }
     } on DioException catch (e) {
-      log("message ${e.toString()}");
+      logs.log("message ${e.toString()}");
       return LoginResponseModel.fromJson(
         e.response?.data['message'],
       );
